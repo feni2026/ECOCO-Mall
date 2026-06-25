@@ -28,16 +28,16 @@
             </div>
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">帳號</label>
-                    <input type="text" id="loginUser" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:border-[#FF5000]" placeholder="請輸入帳號">
+                    <label class="block text-xs font-bold text-gray-600 mb-1">帳號 (User)</label>
+                    <input type="text" id="loginUser" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:border-[#FF5000]" placeholder="admin / marketing / finance">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">密碼</label>
-                    <input type="password" id="loginPass" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:border-[#FF5000]" placeholder="請輸入密碼">
+                    <label class="block text-xs font-bold text-gray-600 mb-1">密碼 (Password)</label>
+                    <input type="password" id="loginPass" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:border-[#FF5000]" placeholder="请输入密码">
                 </div>
-                <div id="loginError" class="text-xs text-red-500 font-bold hidden">❌ 帳號或密碼輸入錯誤！</div>
+                <div id="loginError" class="text-xs text-red-500 font-bold hidden">❌ 帳號或密碼輸入錯誤，請重新輸入！</div>
                 <button onclick="checkLogin()" class="w-full bg-[#FF5000] hover:bg-[#e04500] text-white font-bold py-2.5 rounded-lg text-sm shadow transition-all">
-                    登入系統
+                    登入認證系統
                 </button>
             </div>
         </div>
@@ -50,7 +50,7 @@
                 <span class="text-3xl bg-white p-1 rounded-lg">♻️</span>
                 <div>
                     <h1 class="text-xl md:text-2xl font-black tracking-wider">ECOCO 商城發票手動開立協作平台</h1>
-                    <p class="text-xs text-[#fae0b8] font-medium">行銷填報 ⇄ 財務對接 ‧ 雲端即時協作環境</p>
+                    <p class="text-xs text-[#fae0b8] font-medium">當前登入部門權限：<span id="userBadge" class="bg-[#FF5000] text-white px-2.5 py-0.5 rounded font-black text-sm ml-1 tracking-wide"></span></p>
                 </div>
             </div>
             <button onclick="logout()" class="bg-white/10 hover:bg-white/20 text-white text-xs font-bold px-3 py-1.5 rounded-lg border border-white/20 transition">
@@ -61,15 +61,13 @@
         <div class="bg-white p-6 rounded-2xl shadow-md mb-6 border border-gray-100 w-full">
             <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
                 <h2 class="text-lg font-extrabold text-[#060E9F] flex items-center gap-2">📈 即時開立進度摘要與趨勢</h2>
-                <div class="flex items-center gap-4 text-sm">
-                    <div>
-                        <span class="font-bold text-gray-600">目前檢視基準：</span>
-                        <span id="currentDateLabel" class="bg-[#fae0b8] text-[#060E9F] font-mono px-2 py-1 rounded font-bold"></span>
-                    </div>
+                <div>
+                    <span class="font-bold text-gray-600 text-sm">數據基準日：</span>
+                    <span id="currentDateLabel" class="bg-[#fae0b8] text-[#060E9F] font-mono px-2 py-1 rounded font-bold text-sm"></span>
                 </div>
             </div>
 
-            <div id="statusDashboard" class="grid grid-cols-2 md:grid-cols-6 gap-3 mb-6"></div>
+            <div id="statusDashboard" class="grid grid-cols-2 md:grid-cols-7 gap-3 mb-6"></div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-100">
                 <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
@@ -86,7 +84,7 @@
         <div class="bg-white p-6 rounded-2xl shadow-md mb-6 border border-gray-100 w-full">
             <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
                 <h2 class="text-lg font-extrabold text-[#060E9F] flex items-center gap-2">
-                    <span class="bg-[#FF5000] text-white text-xs px-2.5 py-0.5 rounded-full font-black">行銷端</span> 填寫發票申請資料
+                    <span class="bg-[#FF5000] text-white text-xs px-2.5 py-0.5 rounded-full font-black">填報端</span> 填寫發票開立申請資料
                 </h2>
                 <div id="editingBadge" class="hidden bg-amber-500 text-white text-xs px-3 py-1 rounded-md font-bold animate-pulse">
                     ✏️ 正在編輯歷史訂單...
@@ -106,8 +104,8 @@
                         <input type="date" id="applyDate" required class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-1 focus:ring-[#FF5000]">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">行銷負責人 *</label>
-                        <input type="text" id="picker" required class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-1 focus:ring-[#FF5000]" placeholder="經辦人姓名">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">負責經辦人 *</label>
+                        <input type="text" id="picker" required class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-1 focus:ring-[#FF5000]" placeholder="負責人姓名">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">發票類型 (對應綠鈕) *</label>
@@ -127,27 +125,27 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">載具/統編號碼</label>
-                        <input type="text" id="carrierNo" class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-1 focus:ring-[#FF5000]" placeholder="載具條碼或公司統編">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">載具條碼/公司統一編號</label>
+                        <input type="text" id="carrierNo" class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-1 focus:ring-[#FF5000]" placeholder="/2碼英文+14碼數字">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">買受人/會員名稱</label>
-                        <input type="text" id="custName" class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-1 focus:ring-[#FF5000]" placeholder="公司抬頭或會員名">
+                        <input type="text" id="custName" class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-1 focus:ring-[#FF5000]" placeholder="抬頭或名稱">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">買受人 Email</label>
-                        <input type="text" id="custEmail" list="emailDomains" class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-1 focus:ring-[#FF5000]" placeholder="輸入開頭可快速選取後綴">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">客戶聯絡 Email</label>
+                        <input type="text" id="custEmail" list="emailDomains" class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-1 focus:ring-[#FF5000]" placeholder="abc@gmail.com">
                         <datalist id="emailDomains">
-                            <option value="@gmail.com"><option value="@yahoo.com.tw"><option value="@icloud.com"><option value="@outlook.com"><option value="@hotmail.com">
+                            <option value="@gmail.com"><option value="@yahoo.com.tw"><option value="@icloud.com"><option value="@outlook.com">
                         </datalist>
                     </div>
                     <div class="md:col-span-2">
-                        <label class="block text-xs font-bold text-gray-700 mb-1">詳細地址 (輸入完將自動分析郵編) *</label>
-                        <input type="text" id="address" required onchange="autoExtractZip()" class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-1 focus:ring-[#FF5000]" placeholder="台北市大安區新生南路二段1號">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">詳細地址 (分析郵編) *</label>
+                        <input type="text" id="address" required onchange="autoExtractZip()" class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-1 focus:ring-[#FF5000]" placeholder="台南市東區東門路一段">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">郵遞區號 (自動產出)</label>
-                        <input type="text" id="zipCode" readonly class="w-full border border-gray-300 rounded p-2 text-sm bg-gray-100 font-mono font-bold text-center text-[#060E9F]" placeholder="自動擷取">
+                        <input type="text" id="zipCode" readonly class="w-full border border-gray-300 rounded p-2 text-sm bg-gray-100 font-mono font-bold text-center text-[#060E9F]">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">課稅別</label>
@@ -156,26 +154,26 @@
                         </select>
                     </div>
                     <div class="md:col-span-4">
-                        <label class="block text-xs font-bold text-gray-700 mb-1">發票特殊備註</label>
-                        <input type="text" id="memo" class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-1 focus:ring-[#FF5000]" placeholder="如隨貨附發票等說明">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">特殊備註說明</label>
+                        <input type="text" id="memo" class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-1 focus:ring-[#FF5000]" placeholder="備註文字">
                     </div>
                 </div>
 
                 <div class="border border-gray-200 rounded-xl p-4 bg-gray-50/50">
                     <div class="flex flex-wrap justify-between items-center mb-3 gap-2">
-                        <span class="text-xs font-black text-[#060E9F] tracking-wide">🛒 購物明細清單 (支援相同訂單購買多商品)</span>
-                        <div class="flex items-center gap-2 bg-white px-2 py-1 rounded border border-gray-300 text-xs shadow-3xs">
-                            <input type="text" id="newCustomProduct" class="border-b border-gray-300 px-1 focus:outline-none" placeholder="新增/維護常備商品名稱">
+                        <span class="text-xs font-black text-[#060E9F] tracking-wide">🛒 購買商品明細項目 (支援多品項合併)</span>
+                        <div class="flex items-center gap-2 bg-white px-2 py-1 rounded border border-gray-300 text-xs">
+                            <input type="text" id="newCustomProduct" class="border-b border-gray-300 px-1 focus:outline-none text-xs" placeholder="新增常備商品名稱">
                             <button type="button" onclick="addCustomProduct()" class="bg-[#060E9F] text-white font-bold px-2 py-0.5 rounded text-[11px]">儲存商品</button>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end mb-4 bg-white p-3 rounded-lg border border-gray-200">
                         <div class="md:col-span-5">
-                            <label class="block text-[11px] font-bold text-gray-500 mb-1">選擇或編輯商品名稱 *</label>
+                            <label class="block text-[11px] font-bold text-gray-500 mb-1">選擇或自行修改品項名 *</label>
                             <div class="flex gap-1">
                                 <select id="prodSelect" onchange="syncProductInput()" class="border border-gray-300 rounded p-1.5 text-xs w-1/2"></select>
-                                <input type="text" id="prodNameInput" class="border border-gray-300 rounded p-1.5 text-xs w-1/2" placeholder="或自行在此修改品項名">
+                                <input type="text" id="prodNameInput" class="border border-gray-300 rounded p-1.5 text-xs w-1/2">
                             </div>
                         </div>
                         <div class="md:col-span-2">
@@ -187,9 +185,7 @@
                             <input type="number" id="prodPrice" min="0" class="w-full border border-gray-300 rounded p-1.5 text-xs" placeholder="0">
                         </div>
                         <div class="md:col-span-2">
-                            <button type="button" onclick="addProductRow()" class="w-full bg-[#060E9F] hover:bg-opacity-90 text-white font-bold py-1.5 px-3 rounded text-xs transition">
-                                ➕ 加入此項
-                            </button>
+                            <button type="button" onclick="addProductRow()" class="w-full bg-[#060E9F] text-white font-bold py-1.5 px-3 rounded text-xs">➕ 加入品項</button>
                         </div>
                     </div>
 
@@ -198,7 +194,7 @@
                             <tr class="bg-gray-100 text-gray-700">
                                 <th class="p-2 pl-4">商品名稱</th>
                                 <th class="p-2 text-center w-24">數量</th>
-                                <th class="p-2 text-right w-32">單價 (含稅)</th>
+                                <th class="p-2 text-right w-32">單價</th>
                                 <th class="p-2 text-right w-32">小計</th>
                                 <th class="p-2 text-center w-20">操作</th>
                             </tr>
@@ -206,8 +202,8 @@
                         <tbody id="tempProductItems"></tbody>
                         <tfoot>
                             <tr class="bg-[#fae0b8]/30 font-bold">
-                                <td class="p-2 pl-4 text-[#060E9F]">總計品項數：<span id="summaryTotalQty">0</span> 件</td>
-                                <td colspan="2" class="p-2 text-right text-gray-600">應收申請總價：</td>
+                                <td class="p-2 pl-4 text-[#060E9F]">總計品項：<span id="summaryTotalQty">0</span> 件</td>
+                                <td colspan="2" class="p-2 text-right text-gray-600">總金額：</td>
                                 <td class="p-2 text-right text-base text-[#FF5000] font-black" id="summaryTotalPrice">$0</td>
                                 <td></td>
                             </tr>
@@ -216,40 +212,35 @@
                 </div>
 
                 <div class="text-right flex justify-end gap-3 pt-2">
-                    <button type="button" id="cancelEditBtn" onclick="resetForm()" class="hidden bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-5 rounded text-sm transition shadow">
-                        取消編輯
-                    </button>
-                    <button type="submit" class="bg-[#FF5000] hover:bg-[#e04500] text-white font-black py-2 px-8 rounded text-sm transition shadow-md">
-                        💾 提交發票開立申請
-                    </button>
+                    <button type="button" id="cancelEditBtn" onclick="resetForm()" class="hidden bg-gray-400 text-white font-bold py-2 px-5 rounded text-sm shadow">取消編輯</button>
+                    <button type="submit" class="bg-[#FF5000] hover:bg-[#e04500] text-white font-black py-2 px-8 rounded text-sm shadow-md">💾 提交發票開立申請</button>
                 </div>
             </form>
         </div>
 
         <div class="bg-white p-6 rounded-2xl shadow-md border border-gray-100 w-full mb-6">
             <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
-                <h2 class="text-lg font-extrabold text-[#060E9F] flex items-center gap-2">
-                    <span class="bg-[#060E9F] text-white text-xs px-2.5 py-0.5 rounded-full font-black">財務/行銷共享區</span> 發票開立明細與歷史紀錄
-                </h2>
-                <span class="text-xs text-gray-400 font-medium">💡 點擊任一表格欄位即可「一鍵複製」，極速填入易發票系統</span>
+                <h2 class="text-lg font-extrabold text-[#060E9F] flex items-center gap-2">📋 發票開立明細工作大台面</h2>
+                <span class="text-xs text-gray-400 font-medium">💡 點擊任一表格欄位即可「一鍵複製」，快速貼入易發票後台</span>
             </div>
             
             <div class="w-full overflow-x-auto">
-                <table class="w-full text-left text-xs border border-gray-200 rounded-lg min-w-[1200px]">
+                <table class="w-full text-left text-xs border border-gray-200 rounded-lg min-w-[1250px]">
                     <thead class="bg-[#060E9F] text-white text-[11px] uppercase tracking-wider">
                         <tr>
                             <th class="p-2 text-center w-10">序</th>
-                            <th class="p-2 w-32">開立狀態</th>
+                            <th class="p-2 w-32">狀態控制</th>
                             <th class="p-2 w-24">訂單編號</th>
-                            <th class="p-2 w-24">日期(月份)</th>
-                            <th class="p-2 w-28">類型 / 載具</th>
-                            <th class="p-2 w-24 bg-[#FF5000]/10 text-[#FF5000]">載具/統編</th>
-                            <th class="p-2 w-32">買受人資訊</th>
-                            <th class="p-2 w-36">聯絡資訊</th>
-                            <th class="p-2 w-44 bg-[#FF5000]/10 text-[#FF5000]">商品明細 (點選複製)</th>
+                            <th class="p-2 w-24">申請日期</th>
+                            <th class="p-2 w-28">發票/載具</th>
+                            <th class="p-2 w-28 bg-[#FF5000]/10 text-[#FF5000]">載具/統編</th>
+                            <th class="p-2 w-28">客戶名稱</th>
+                            <th class="p-2 w-36">聯絡資訊/經辦</th>
+                            <th class="p-2 w-44">地址</th>
+                            <th class="p-2 w-44 bg-[#060E9F]/10 text-[#060E9F]">商品內容 (點選複製)</th>
                             <th class="p-2 w-20 text-right">總金額</th>
-                            <th class="p-2 w-32">回報發票號碼</th>
-                            <th class="p-2 text-center w-28">管理操作</th>
+                            <th class="p-2 w-32 bg-[#FF5000]/10 text-[#FF5000]">發票號碼</th>
+                            <th class="p-2 text-center w-24">維護</th>
                         </tr>
                     </thead>
                     <tbody id="activeInvoiceTable" class="divide-y divide-gray-100 font-medium text-gray-700"></tbody>
@@ -258,7 +249,7 @@
         </div>
 
         <div class="bg-white/80 p-6 rounded-2xl shadow-sm border border-gray-200 w-full">
-            <h2 class="text-base font-bold text-gray-500 mb-3 flex items-center gap-2">📦 結案歷史資料封存專專區</h2>
+            <h2 class="text-base font-bold text-gray-500 mb-3 flex items-center gap-2">📦 結案歷史資料封存專區</h2>
             <div class="w-full overflow-x-auto">
                 <table class="w-full text-left text-xs border border-gray-100 bg-gray-50/50 rounded-lg min-w-[1000px]">
                     <thead class="bg-gray-400 text-white text-[11px]">
@@ -268,25 +259,27 @@
                             <th class="p-2 w-24">日期</th>
                             <th class="p-2 w-28">類型/載具</th>
                             <th class="p-2 w-24">載具/統編</th>
-                            <th class="p-2 w-32">買受人名稱</th>
-                            <th class="p-2 w-44">封存商品內容</th>
+                            <th class="p-2 w-32">買受人</th>
+                            <th class="p-2 w-44">封存明細</th>
                             <th class="p-2 w-20 text-right">總金額</th>
                             <th class="p-2 w-32">發票號碼</th>
-                            <th class="p-2 text-center w-28">操作</th>
+                            <th class="p-2 text-center w-24">操作</th>
                         </tr>
                     </thead>
-                    <tbody id="archivedInvoiceTable" class="divide-y divide-gray-100 text-gray-500"></tbody>
+                    <tbody id="archivedInvoiceTable" class="divide-y divide-gray-100 text-gray-400"></tbody>
                 </table>
             </div>
         </div>
     </div>
 
     <script>
-        // 🔒 簡易跨部門高強度認證配置 (對齊您的需求)
-        const AUTH_USER = "ecoco";
-        const AUTH_PASS = "2026";
+        // 🔐 嚴格定義三大權限部門帳號密碼
+        const SECTOR_ACCOUNTS = {
+            "admin": { pass: "admin2026", role: "管理者", canEditInvoice: true, canChangeStatus: true },
+            "marketing": { pass: "mkt2026", role: "行銷部", canEditInvoice: false, canChangeStatus: false },
+            "finance": { pass: "fin2026", role: "財務部", canEditInvoice: true, canChangeStatus: true }
+        };
 
-        // 郵局公開行政區郵遞區號對照表
         const postZipDb = [
             { city: "台北市", dist: "中正區", code: "100" }, { city: "台北市", dist: "大同區", code: "103" },
             { city: "台北市", dist: "中山區", code: "104" }, { city: "台北市", dist: "松山區", code: "105" },
@@ -300,88 +293,67 @@
             { city: "台中市", dist: "西屯區", code: "407" }
         ];
 
-        // ⚡ 核心改寫：建立即時雲端 Supabase 連線管道 (免後端伺服器架構)
+        // 🔗 建立 Supabase 資料庫渠道
         const supabaseUrl = 'https://xtujwomvbyvkmzsnvvyb.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0dWp3b212Ynl2a216c252dnliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTkyNzQ0MDAsImV4cCI6MjAzNDg1MDQwMH0.e7F_wshmYhSDR7_F9X8GfK_wRk90aFw';
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // 系統主記憶體變數
+        let currentUser = null; 
         let customProducts = JSON.parse(localStorage.getItem('ecoco_products')) || ["環保造型儲值卡", "智慧綠能回收箱A1", "特製隨行杯", "線上碳盤查課程項目"];
-        let invoiceData = []; // 資料將全數與 Supabase 同步
+        let invoiceData = []; 
         let currentFormProducts = [];
-
         let monthChartInstance = null;
         let weekChartInstance = null;
 
-        // 登入驗證機制
+        // 嚴格權限登入驗證
         function checkLogin() {
-            const u = document.getElementById('loginUser').value;
+            const u = document.getElementById('loginUser').value.trim();
             const p = document.getElementById('loginPass').value;
-            if(u === AUTH_USER && p === AUTH_PASS) {
+            
+            if(SECTOR_ACCOUNTS[u] && SECTOR_ACCOUNTS[u].pass === p) {
+                currentUser = SECTOR_ACCOUNTS[u];
                 document.getElementById('loginOverlay').classList.add('hidden');
-                const main = document.getElementById('mainContent');
-                main.classList.remove('opacity-0');
+                document.getElementById('mainContent').classList.remove('opacity-0');
+                document.getElementById('userBadge').innerText = currentUser.role;
                 initSystem();
             } else {
-                const err = document.getElementById('loginError');
-                err.classList.remove('hidden');
+                document.getElementById('loginError').classList.remove('hidden');
             }
         }
 
         function logout() { window.location.reload(); }
 
-        // 初始化系統
         function initSystem() {
             const today = new Date();
             document.getElementById('applyDate').value = today.toISOString().split('T')[0];
             document.getElementById('currentDateLabel').innerText = `${today.getFullYear()}年 ${today.getMonth()+1}月 ${today.getDate()}日`;
-            
             renderProductSelect();
-            fetchInvoices(); // 從 Supabase 雲端抓取發票
+            fetchInvoices();
         }
 
-        // ⚡ 核心改寫：從雲端獲取最新即時資料 (多螢幕同步)
         async function fetchInvoices() {
             const { data, error } = await _supabase.from('ecoco_invoices').select('*').order('created_at', { ascending: false });
             if (!error && data) {
-                // 將資料庫的欄位蛇形命名對齊前端駝峰命名
                 invoiceData = data.map(item => ({
-                    id: item.id,
-                    orderId: item.order_id,
-                    applyDate: item.apply_date,
-                    monthKey: item.month_key,
-                    weekKey: item.week_key,
-                    picker: item.picker,
-                    invType: item.inv_type,
-                    carrierType: item.carrier_type,
-                    carrierNo: item.carrier_no,
-                    custName: item.cust_name,
-                    custEmail: item.cust_email,
-                    address: item.address,
-                    zip: item.zip,
-                    taxType: item.tax_type,
-                    memo: item.memo,
-                    products: item.products, // jsonb 陣列自動解析
-                    grandTotal: item.grand_total,
-                    status: item.status,
-                    invNo: item.inv_no,
-                    isArchived: item.is_archived
+                    id: item.id, orderId: item.order_id, applyDate: item.apply_date,
+                    monthKey: item.month_key, weekKey: item.week_key, picker: item.picker,
+                    invType: item.inv_type, carrierType: item.carrier_type, carrierNo: item.carrier_no,
+                    custName: item.cust_name, custEmail: item.cust_email, address: item.address,
+                    zip: item.zip, taxType: item.tax_type, memo: item.memo, products: item.products,
+                    grandTotal: item.grand_total, status: item.status, invNo: item.inv_no, isArchived: item.is_archived
                 }));
                 renderTable();
                 updateDashboard();
             }
         }
 
-        // 商品品項主檔清單維護
         function renderProductSelect() {
             const select = document.getElementById('prodSelect');
             select.innerHTML = customProducts.map(p => `<option value="${p}">${p}</option>`).join('');
             syncProductInput();
         }
 
-        function syncProductInput() {
-            document.getElementById('prodNameInput').value = document.getElementById('prodSelect').value;
-        }
+        function syncProductInput() { document.getElementById('prodNameInput').value = document.getElementById('prodSelect').value; }
 
         function addCustomProduct() {
             const val = document.getElementById('newCustomProduct').value.trim();
@@ -390,31 +362,23 @@
                 localStorage.setItem('ecoco_products', JSON.stringify(customProducts));
                 renderProductSelect();
                 document.getElementById('newCustomProduct').value = "";
-                alert("✅ 商品品項已成功儲存至常用主檔清單！");
             }
         }
 
-        // 行政區郵遞區號自動擷取
         function autoExtractZip() {
             const addr = document.getElementById('address').value;
             let foundZip = "701"; 
             for (let item of postZipDb) {
-                if (addr.includes(item.city) && addr.includes(item.dist)) {
-                    foundZip = item.code;
-                    break;
-                }
+                if (addr.includes(item.city) && addr.includes(item.dist)) { foundZip = item.code; break; }
             }
             document.getElementById('zipCode').value = foundZip;
         }
 
-        // 處理購物明細暫存操作
         function addProductRow() {
             const name = document.getElementById('prodNameInput').value.trim();
             const qty = parseInt(document.getElementById('prodQty').value) || 1;
             const price = parseInt(document.getElementById('prodPrice').value) || 0;
-
-            if(!name) { alert("請填寫或選取商品名稱！"); return; }
-
+            if(!name) return;
             currentFormProducts.push({ name, qty, price, total: qty * price });
             renderTempProductItems();
             document.getElementById('prodQty').value = 1;
@@ -434,124 +398,89 @@
                     <td class="p-2 text-center font-mono font-bold">${p.qty}</td>
                     <td class="p-2 text-right font-mono text-gray-500">$${p.price}</td>
                     <td class="p-2 text-right font-mono font-bold text-[#060E9F]">$${p.total}</td>
-                    <td class="p-2 text-center">
-                        <button type="button" onclick="removeProductRow(${idx})" class="text-red-500 font-bold hover:underline">移除</button>
-                    </td>
+                    <td class="p-2 text-center"><button type="button" onclick="removeProductRow(${idx})" class="text-red-500 font-bold hover:underline">移除</button></td>
                 </tr>
             `).join('');
-            const totalQty = currentFormProducts.reduce((sum, p) => sum + p.qty, 0);
-            const totalPrice = currentFormProducts.reduce((sum, p) => sum + p.total, 0);
-            document.getElementById('summaryTotalQty').innerText = totalQty;
-            document.getElementById('summaryTotalPrice').innerText = `$${totalPrice}`;
+            document.getElementById('summaryTotalQty').innerText = currentFormProducts.reduce((sum, p) => sum + p.qty, 0);
+            document.getElementById('summaryTotalPrice').innerText = `$${currentFormProducts.reduce((sum, p) => sum + p.total, 0)}`;
         }
 
-        // 一鍵複製核心功能
         function copyValue(text, element) {
             if(!text) return;
             navigator.clipboard.writeText(text).then(() => {
                 const origClass = element.className;
-                element.classList.add('copy-success');
+                element.className = origClass + " copy-success";
                 setTimeout(() => { element.className = origClass; }, 600);
             });
         }
 
-        // ⚡ 核心改寫：提交或修改發票申請 (直接寫入雲端)
         async function handleFormSubmit(e) {
             e.preventDefault();
-            if(currentFormProducts.length === 0) {
-                alert("❌ 請至少加入一項商品到明細清單中！");
-                return;
-            }
-
+            if(currentFormProducts.length === 0) { alert("❌ 請至少加入一項商品明細項目！"); return; }
             const editId = document.getElementById('editRowId').value;
             const applyDateVal = document.getElementById('applyDate').value;
             const d = new Date(applyDateVal);
             const monthStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
             const start = new Date(d.getFullYear(), 0, 1);
             const diff = d - start + (start.getTimezoneOffset() - d.getTimezoneOffset()) * 60 * 1000;
-            const oneDay = 1000 * 60 * 60 * 24;
-            const weekNo = Math.floor((diff / oneDay) / 7) + 1;
+            const weekNo = Math.floor((diff / (1000*60*60*24)) / 7) + 1;
             const weekStr = `${d.getFullYear()}-W${String(weekNo).padStart(2, '0')}`;
-            const grandTotalVal = currentFormProducts.reduce((sum, p) => sum + p.total, 0);
 
-            // 資料庫欄位結構對齊
             const payload = {
-                order_id: document.getElementById('orderId').value.trim(),
-                apply_date: applyDateVal,
-                month_key: monthStr,
-                week_key: weekStr,
-                picker: document.getElementById('picker').value.trim(),
-                inv_type: document.getElementById('invType').value,
-                carrier_type: document.getElementById('carrierType').value,
-                carrier_no: document.getElementById('carrierNo').value.trim(),
-                cust_name: document.getElementById('custName').value.trim(),
-                cust_email: document.getElementById('custEmail').value.trim(),
-                address: document.getElementById('address').value.trim(),
-                zip: document.getElementById('zipCode').value,
-                tax_type: document.getElementById('taxType').value,
-                memo: document.getElementById('memo').value.trim(),
-                products: currentFormProducts,
-                grand_total: grandTotalVal
+                order_id: document.getElementById('orderId').value.trim(), apply_date: applyDateVal,
+                month_key: monthStr, week_key: weekStr, picker: document.getElementById('picker').value.trim(),
+                inv_type: document.getElementById('invType').value, carrier_type: document.getElementById('carrierType').value,
+                carrier_no: document.getElementById('carrierNo').value.trim(), cust_name: document.getElementById('custName').value.trim(),
+                cust_email: document.getElementById('custEmail').value.trim(), address: document.getElementById('address').value.trim(),
+                zip: document.getElementById('zipCode').value, tax_type: document.getElementById('taxType').value,
+                memo: document.getElementById('memo').value.trim(), products: currentFormProducts,
+                grand_total: currentFormProducts.reduce((sum, p) => sum + p.total, 0)
             };
 
             if(editId) {
-                // 編輯更新模式
                 const { error } = await _supabase.from('ecoco_invoices').update(payload).eq('id', editId);
-                if (error) { alert("更新雲端失敗：" + error.message); return; }
+                if (error) { alert("更新失敗：" + error.message); return; }
             } else {
-                // 全新創立模式
-                payload.status = "1. 行銷已提交";
-                payload.inv_no = "";
-                payload.is_archived = false;
+                payload.status = "1. 行銷已提交"; payload.inv_no = ""; payload.is_archived = false;
                 const { error } = await _supabase.from('ecoco_invoices').insert([payload]);
-                if (error) { alert("上傳雲端失敗：" + error.message); return; }
+                if (error) { alert("創立失敗：" + error.message); return; }
             }
-
-            resetForm();
-            fetchInvoices(); // 從雲端重新刷洗台面
-            alert("💾 數據已成功同步寫入雲端資料庫！");
+            resetForm(); fetchInvoices(); alert("💾 資料已成功同步至雲端中心！");
         }
 
-        // ⚡ 核心改寫：更新開立回報狀態至雲端
         async function updateStatus(id, newStatus) {
-            const { error } = await _supabase.from('ecoco_invoices').update({ status: newStatus }).eq('id', id);
-            if(!error) fetchInvoices();
+            if(!currentUser.canChangeStatus) { alert("🔒 您的權限不足（行銷部僅限報件，無法更改審核狀態）！"); fetchInvoices(); return; }
+            await _supabase.from('ecoco_invoices').update({ status: newStatus }).eq('id', id);
+            fetchInvoices();
         }
 
-        // ⚡ 核心改寫：更新回報發票號碼至雲端
         async function updateInvoiceNumber(id, val) {
-            const { error } = await _supabase.from('ecoco_invoices').update({ inv_no: val.trim() }).eq('id', id);
-            if(!error) {
-                // 異步無痕更新本地看板統計數，避免輸入框頻繁刷新卡頓
-                const idx = invoiceData.findIndex(o => o.id == id);
-                if (idx > -1) {
-                    invoiceData[idx].invNo = val.trim();
-                    updateDashboard();
-                }
-            }
+            if(!currentUser.canEditInvoice) { alert("🔒 您的權限不足（僅限財務部與管理者填寫發票號碼）！"); fetchInvoices(); return; }
+            await _supabase.from('ecoco_invoices').update({ inv_no: val.trim() }).eq('id', id);
+            const idx = invoiceData.findIndex(o => o.id == id);
+            if (idx > -1) { invoiceData[idx].invNo = val.trim(); updateDashboard(); }
         }
 
-        // ⚡ 核心改寫：雲端封存
         async function archiveRow(id) {
-            const { error } = await _supabase.from('ecoco_invoices').update({ is_archived: true }).eq('id', id);
-            if(!error) fetchInvoices();
+            if(!currentUser.canChangeStatus) { alert("🔒 權限不足！"); return; }
+            await _supabase.from('ecoco_invoices').update({ is_archived: true }).eq('id', id);
+            fetchInvoices();
         }
 
-        // ⚡ 核心改寫：雲端解封
         async function unarchiveRow(id) {
-            const { error } = await _supabase.from('ecoco_invoices').update({ is_archived: false }).eq('id', id);
-            if(!error) fetchInvoices();
+            if(!currentUser.canChangeStatus) { alert("🔒 權限不足！"); return; }
+            await _supabase.from('ecoco_invoices').update({ is_archived: false }).eq('id', id);
+            fetchInvoices();
         }
 
-        // ⚡ 核心改寫：雲端刪除
         async function deleteRow(id) {
-            if(confirm("♻️ 確定要刪除這筆開立明細嗎？刪除後無法還原。")) {
-                const { error } = await _supabase.from('ecoco_invoices').delete().eq('id', id);
-                if(!error) fetchInvoices();
+            if(currentUser.role !== '管理者') { alert("🔒 只有高級管理者帳號才可以徹底刪除雲端紀錄！"); return; }
+            if(confirm("確定要徹底刪除此筆雲端紀錄嗎？")) {
+                await _supabase.from('ecoco_invoices').delete().eq('id', id);
+                fetchInvoices();
             }
         }
 
-        // 載入編輯模式
         function loadEditRow(id) {
             const item = invoiceData.find(o => o.id == id);
             if(item) {
@@ -570,7 +499,6 @@
                 document.getElementById('memo').value = item.memo;
                 currentFormProducts = [...item.products];
                 renderTempProductItems();
-
                 document.getElementById('editingBadge').classList.remove('hidden');
                 document.getElementById('cancelEditBtn').classList.remove('hidden');
                 window.scrollTo({ top: document.getElementById('invoiceForm').offsetTop - 20, behavior: 'smooth' });
@@ -580,32 +508,33 @@
         function resetForm() {
             document.getElementById('invoiceForm').reset();
             document.getElementById('editRowId').value = "";
-            currentFormProducts = [];
-            renderTempProductItems();
+            currentFormProducts = []; renderTempProductItems();
             document.getElementById('editingBadge').classList.add('hidden');
             document.getElementById('cancelEditBtn').classList.add('hidden');
             document.getElementById('applyDate').value = new Date().toISOString().split('T')[0];
         }
 
-        // 渲染發票明細表格資料
         function renderTable() {
             const activeBody = document.getElementById('activeInvoiceTable');
             const archiveBody = document.getElementById('archivedInvoiceTable');
-
             const activeItems = invoiceData.filter(o => !o.isArchived);
             const archivedItems = invoiceData.filter(o => o.isArchived);
 
+            // 根據不同登入角色，決定發票號碼、下拉選單是否唯讀
+            const statusAttr = currentUser.canChangeStatus ? '' : 'disabled bg-gray-100 cursor-not-allowed';
+            const invoiceAttr = currentUser.canEditInvoice ? '' : 'disabled bg-gray-100 cursor-not-allowed';
+
             if(activeItems.length === 0) {
-                activeBody.innerHTML = `<tr><td colspan="12" class="text-center p-6 text-gray-400">📋 目前沒有處理中的發票開立申請明細。</td></tr>`;
+                activeBody.innerHTML = `<tr><td colspan="13" class="text-center p-6 text-gray-400">📋 目前沒有任何發票申請紀錄。</td></tr>`;
             } else {
                 activeBody.innerHTML = activeItems.map((item, idx) => {
                     const prodDesc = item.products.map(p => `${p.name} (${p.qty}件)`).join(', ');
                     const prodCopyText = item.products.map(p => `${p.name} x${p.qty}`).join('\n');
                     return `
-                        <tr class="hover:bg-gray-50 transition border-b border-gray-100 text-gray-700">
+                        <tr class="hover:bg-gray-50 border-b border-gray-100 text-gray-700">
                             <td class="p-2 text-center font-mono font-bold text-gray-400">${idx + 1}</td>
                             <td class="p-2">
-                                <select onchange="updateStatus(${item.id}, this.value)" class="border border-gray-300 rounded p-1 text-xs font-bold w-full focus:outline-none bg-white">
+                                <select ${statusAttr} onchange="updateStatus(${item.id}, this.value)" class="border border-gray-300 rounded p-1 text-xs font-bold w-full bg-white">
                                     <option value="1. 行銷已提交" ${item.status==='1. 行銷已提交'?'selected':''}>1. 行銷已提交</option>
                                     <option value="2. 財務處理中" ${item.status==='2. 財務處理中'?'selected':''}>2. 財務處理中</option>
                                     <option value="3. 已成功開立並列印" ${item.status==='3. 已成功開立並列印'?'selected':''}>3. 已成功開立並列印</option>
@@ -614,25 +543,24 @@
                                     <option value="6. 退貨發票作廢" ${item.status==='6. 退貨發票作廢'?'selected':''}>6. 退貨發票作廢</option>
                                 </select>
                             </td>
-                            <td class="p-2 font-mono text-gray-600 font-bold hover:bg-gray-100 cursor-pointer rounded transition" onclick="copyValue('${item.orderId}', this)" title="點擊複製">${item.orderId}</td>
-                            <td class="p-2 font-mono text-gray-500 hover:bg-gray-100 cursor-pointer rounded transition" onclick="copyValue('${item.applyDate}', this)" title="點擊複製">${item.applyDate}</td>
-                            <td class="p-2 text-gray-600 hover:bg-gray-100 cursor-pointer rounded transition" onclick="copyValue('${item.invType}', this)" title="點擊複製">${item.invType}<br><span class="text-[10px] text-gray-400">${item.carrierType}</span></td>
-                            <td class="p-2 font-mono font-bold text-[#FF5000] bg-gray-50 hover:bg-[#FF5000]/10 cursor-pointer rounded transition border border-dashed border-gray-200" onclick="copyValue('${item.carrierNo}', this)" title="點擊複製">${item.carrierNo || '<span class="text-gray-300">紙本列印</span>'}</td>
-                            <td class="p-2 truncate max-w-[120px] font-bold hover:bg-gray-100 cursor-pointer rounded transition" onclick="copyValue('${item.custName}', this)" title="點擊複製">${item.custName || '<span class="text-gray-300">個人</span>'}</td>
-                            <td class="p-2 text-[11px] text-gray-500 max-w-[140px] truncate hover:bg-gray-100 cursor-pointer rounded transition" onclick="copyValue('${item.custEmail}', this)" title="點擊複製">${item.custEmail || '-'}<br>${item.picker}</td>
-                            <td class="p-2 max-w-[160px] truncate bg-gray-50 hover:bg-[#060E9F]/10 cursor-pointer rounded transition" onclick="copyValue('${item.zip} ${item.address}', this)" title="點擊複製"><span class="bg-gray-200 font-mono text-[10px] px-1 rounded font-bold">${item.zip}</span> ${item.address}</td>
-                            <td class="p-2 bg-gray-50 hover:bg-gray-100 cursor-pointer rounded transition" onclick="copyValue('${prodCopyText}', this)" title="點擊複製商品明細">
-                                <div class="truncate font-medium text-gray-800 max-w-[160px]" title="${prodDesc}">${prodDesc}</div>
-                                <div class="text-[10px] text-gray-400 font-bold">${item.products ? item.products.length : 0}品項 ‧ 稅別:${item.taxType}</div>
+                            <td class="p-2 font-mono font-bold text-gray-600 hover:bg-gray-100 cursor-pointer rounded" onclick="copyValue('${item.orderId}', this)">${item.orderId}</td>
+                            <td class="p-2 font-mono text-gray-500 hover:bg-gray-100 cursor-pointer rounded" onclick="copyValue('${item.applyDate}', this)">${item.applyDate}</td>
+                            <td class="p-2 text-gray-600 hover:bg-gray-100 cursor-pointer rounded" onclick="copyValue('${item.invType}', this)">${item.invType}<br><span class="text-[10px] text-gray-400 font-bold">${item.carrierType}</span></td>
+                            <td class="p-2 font-mono font-bold text-[#FF5000] bg-gray-50 hover:bg-[#FF5000]/10 cursor-pointer rounded" onclick="copyValue('${item.carrierNo}', this)">${item.carrierNo || '<span class="text-gray-300">紙本開立</span>'}</td>
+                            <td class="p-2 font-bold max-w-[100px] truncate hover:bg-gray-100 cursor-pointer rounded" onclick="copyValue('${item.custName}', this)">${item.custName || '個人'}</td>
+                            <td class="p-2 text-[11px] text-gray-500 max-w-[130px] truncate hover:bg-gray-100 cursor-pointer rounded" onclick="copyValue('${item.custEmail}', this)">${item.custEmail || '-'}<br><span class="text-gray-400">經辦:${item.picker}</span></td>
+                            <td class="p-2 max-w-[150px] truncate hover:bg-gray-100 cursor-pointer rounded" onclick="copyValue('${item.zip} ${item.address}', this)"><span class="bg-gray-200 text-[10px] font-mono px-1 rounded font-bold">${item.zip}</span> ${item.address}</td>
+                            <td class="p-2 max-w-[150px] truncate bg-gray-50 hover:bg-[#060E9F]/10 cursor-pointer rounded" onclick="copyValue('${prodCopyText}', this)">
+                                <div class="truncate text-gray-800" title="${prodDesc}">${prodDesc}</div>
+                                <div class="text-[10px] text-gray-400 font-bold">稅別:${item.taxType} ‧ 備註:${item.memo||'無'}</div>
                             </td>
-                            <td class="p-2 text-right font-mono font-black text-[#060E9F] hover:bg-gray-100 cursor-pointer rounded transition" onclick="copyValue('${item.grandTotal}', this)">$${item.grandTotal}</td>
+                            <td class="p-2 text-right font-mono font-black text-[#060E9F] hover:bg-gray-100 cursor-pointer rounded text-sm" onclick="copyValue('${item.grandTotal}', this)">$${item.grandTotal}</td>
                             <td class="p-2">
-                                <input type="text" value="${item.invNo || ''}" onchange="updateInvoiceNumber(${item.id}, this.value)" class="w-full border border-gray-300 rounded p-1 text-xs font-mono focus:border-[#060E9F]" placeholder="回填發票號碼">
+                                <input ${invoiceAttr} type="text" value="${item.invNo || ''}" onchange="updateInvoiceNumber(${item.id}, this.value)" class="w-full border border-gray-300 rounded p-1 text-xs font-mono font-bold text-center uppercase placeholder-gray-300" placeholder="財務填發票號">
                             </td>
                             <td class="p-2 text-center space-x-1">
                                 <button type="button" onclick="loadEditRow(${item.id})" class="text-[#060E9F] font-bold hover:underline">編輯</button>
                                 <button type="button" onclick="archiveRow(${item.id})" class="text-amber-600 font-bold hover:underline">封存</button>
-                                <button type="button" onclick="deleteRow(${item.id})" class="text-red-500 font-bold hover:underline">刪除</button>
                             </td>
                         </tr>
                     `;
@@ -640,32 +568,28 @@
             }
 
             if(archivedItems.length === 0) {
-                archiveBody.innerHTML = `<tr><td colspan="10" class="text-center p-4 text-gray-400 text-xs">📦 封存專區目前沒有歷史結案資料。</td></tr>`;
+                archiveBody.innerHTML = `<tr><td colspan="10" class="text-center p-4 text-gray-400 text-xs">📦 封存專區目前無結案資料。</td></tr>`;
             } else {
-                archiveBody.innerHTML = archivedItems.map((item, idx) => {
-                    const prodDesc = item.products ? item.products.map(p => `${p.name} (${p.qty}件)`).join(', ') : '';
-                    return `
-                        <tr class="bg-gray-50/70 text-gray-400">
-                            <td class="p-2 text-center font-mono">${idx + 1}</td>
-                            <td class="p-2 font-mono">${item.orderId}</td>
-                            <td class="p-2 font-mono">${item.applyDate}</td>
-                            <td class="p-2">${item.invType}</td>
-                            <td class="p-2 font-mono">${item.carrierNo || '紙本列印'}</td>
-                            <td class="p-2 truncate max-w-[120px]">${item.custName || '個人'}</td>
-                            <td class="p-2 truncate max-w-[180px]" title="${prodDesc}">${prodDesc}</td>
-                            <td class="p-2 text-right font-mono font-bold">$${item.grandTotal}</td>
-                            <td class="p-2 font-mono text-gray-600 font-bold">${item.invNo || '未回填'}</td>
-                            <td class="p-2 text-center space-x-2">
-                                <button type="button" onclick="unarchiveRow(${item.id})" class="text-blue-500 hover:underline">解封</button>
-                                <button type="button" onclick="deleteRow(${item.id})" class="text-red-400 hover:underline">徹底刪除</button>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
+                archiveBody.innerHTML = archivedItems.map((item, idx) => `
+                    <tr class="bg-gray-50/70 text-gray-400">
+                        <td class="p-2 text-center font-mono">${idx + 1}</td>
+                        <td class="p-2 font-mono">${item.orderId}</td>
+                        <td class="p-2 font-mono">${item.applyDate}</td>
+                        <td class="p-2">${item.invType}</td>
+                        <td class="p-2 font-mono">${item.carrierNo || '紙本列印'}</td>
+                        <td class="p-2 truncate max-w-[120px]">${item.custName || '個人'}</td>
+                        <td class="p-2 truncate max-w-[180px]">${item.products.map(p => p.name).join(', ')}</td>
+                        <td class="p-2 text-right font-mono font-bold">$${item.grandTotal}</td>
+                        <td class="p-2 font-mono text-gray-600 font-bold">${item.invNo || '未回填'}</td>
+                        <td class="p-2 text-center space-x-2">
+                            <button type="button" onclick="unarchiveRow(${item.id})" class="text-blue-500 hover:underline">解封</button>
+                            <button type="button" onclick="deleteRow(${item.id})" class="text-red-400 hover:underline">徹底刪除</button>
+                        </td>
+                    </tr>
+                `).join('');
             }
         }
 
-        // 更新數據看板與動態渲染 Chart.js 趨勢圖形
         function updateDashboard() {
             const totalCount = invoiceData.length;
             const statuses = ["1. 行銷已提交", "2. 財務處理中", "3. 已成功開立並列印", "4. 資料有誤退回", "5. 發票已寄送", "6. 退貨發票作廢"];
@@ -673,63 +597,37 @@
 
             let html = `
                 <div class="bg-[#060E9F]/10 p-3 rounded-xl border border-[#060E9F]/20">
-                    <p class="text-[11px] font-black text-gray-500">歷年累積申請案</p>
+                    <p class="text-[11px] font-black text-gray-500">歷史累計總數</p>
                     <p class="text-xl font-black text-[#060E9F]">${totalCount} 筆</p>
-                    <div class="w-full bg-gray-200 h-1.5 rounded mt-1.5"><div class="bg-[#060E9F] h-1.5 rounded" style="width: 100%"></div></div>
                 </div>
             `;
             statuses.forEach((status, idx) => {
                 const count = invoiceData.filter(i => i.status === status).length;
                 const percent = totalCount > 0 ? (count / totalCount * 100).toFixed(0) : 0;
                 html += `
-                    <div class="bg-white p-3 rounded-xl border border-gray-200 shadow-2xs">
-                        <p class="text-[11px] font-bold text-gray-500 truncate" title="${status}">${status}</p>
-                        <p class="text-xl font-black text-gray-800">${count} <span class="text-xs font-normal text-gray-400">(${percent}%)</span></p>
-                        <div class="w-full bg-gray-100 h-1.5 rounded mt-1.5">
-                            <div class="${colors[idx]} h-1.5 rounded transition-all duration-500" style="width: ${percent}%"></div>
-                        </div>
+                    <div class="bg-white p-3 rounded-xl border border-gray-200">
+                        <p class="text-[10px] font-bold text-gray-400 truncate" title="${status}">${status}</p>
+                        <p class="text-base font-black text-gray-800">${count} <span class="text-[11px] font-normal text-gray-400">(${percent}%)</span></p>
+                        <div class="w-full bg-gray-100 h-1 rounded mt-1"><div class="${colors[idx]} h-1 rounded transition-all" style="width: ${percent}%"></div></div>
                     </div>
                 `;
             });
             document.getElementById('statusDashboard').innerHTML = html;
 
-            const monthMap = {};
-            const weekMap = {};
-
+            const monthMap = {}; const weekMap = {};
             invoiceData.forEach(item => {
                 if(item.monthKey) monthMap[item.monthKey] = (monthMap[item.monthKey] || 0) + 1;
                 if(item.weekKey) weekMap[item.weekKey] = (weekMap[item.weekKey] || 0) + 1;
             });
-            const sortedMonths = Object.keys(monthMap).sort();
-            const sortedMonthData = sortedMonths.map(k => monthMap[k]);
-
-            const sortedWeeks = Object.keys(weekMap).sort().slice(-8);
-            const sortedWeekData = sortedWeeks.map(k => weekMap[k]);
-
-            // 渲染 Chart.js 月份圖表
+            
             if (monthChartInstance) monthChartInstance.destroy();
-            const ctxMonth = document.getElementById('monthChart').getContext('2d');
-            monthChartInstance = new Chart(ctxMonth, {
+            monthChartInstance = new Chart(document.getElementById('monthChart').getContext('2d'), {
                 type: 'bar',
-                data: {
-                    labels: sortedMonths.length ? sortedMonths : ["無數據"],
-                    datasets: [{ label: '每月訂單申請量', data: sortedMonthData.length ? sortedMonthData : [0], backgroundColor: '#060E9F', borderRadius: 4 }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+                data: { labels: Object.keys(monthMap).sort(), datasets: [{ label: '每月訂單申請量', data: Object.keys(monthMap).sort().map(k => monthMap[k]), backgroundColor: '#060E9F', borderRadius: 4 }] },
+                options: { responsive: true, maintainAspectRatio: false }
             });
 
-            // 渲染 Chart.js 每週圖表
             if (weekChartInstance) weekChartInstance.destroy();
-            const ctxWeek = document.getElementById('weekChart').getContext('2d');
-            weekChartInstance = new Chart(ctxWeek, {
+            weekChartInstance = new Chart(document.getElementById('weekChart').getContext('2d'), {
                 type: 'line',
-                data: {
-                    labels: sortedWeeks.length ? sortedWeeks : ["無數據"],
-                    datasets: [{ label: '每週趨勢起伏', data: sortedWeekData.length ? sortedWeekData : [0], borderColor: '#FF5000', backgroundColor: 'rgba(255, 80, 0, 0.2)', fill: true, tension: 0.2 }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
-            });
-        }
-    </script>
-</body>
-</html>
+                data: { labels: Object.keys(weekMap).sort().slice(-8), datasets: [{ label: '每週趨勢', data: Object.keys(weekMap).sort().slice(-8).map(k => weekMap[k]), borderColor
