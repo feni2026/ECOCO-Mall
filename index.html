@@ -36,7 +36,8 @@
                     <input type="password" id="loginPass" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:border-[#FF5000]" placeholder="請輸入密碼">
                 </div>
                 <div id="loginError" class="text-xs text-red-500 font-bold hidden">❌ 帳號或密碼輸入錯誤，請重新輸入！</div>
-                <button type="button" onclick="checkLogin()" class="w-full bg-[#FF5000] hover:bg-[#e04500] text-white font-bold py-2.5 rounded-lg text-sm shadow transition-all cursor-pointer">
+                
+                <button type="button" onclick="checkLogin()" class="w-full bg-[#FF5000] hover:bg-[#e04500] text-white font-bold py-2.5 rounded-lg text-sm shadow transition-all cursor-pointer text-center block">
                     登入認證系統
                 </button>
             </div>
@@ -299,20 +300,21 @@
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         let currentUser = null; 
-        let customProducts = JSON.parse(localStorage.getItem('ecoco_products')) || ["環保造型儲值卡", "智慧綠能回收箱A1", "特製隨行杯", "線上碳盤查課程項目"];
+        let customProducts = JSON.parse(localStorage.getItem('ecoco_products')) || ["環保造型儲值卡", "智慧綠能回收箱A1", "特製随行杯", "線上碳盤查課程項目"];
         let invoiceData = []; 
         let currentFormProducts = [];
         let monthChartInstance = null;
         let weekChartInstance = null;
 
-        // 嚴格權限與防呆登入驗證
+        // 💡 核心修正：將函式名稱統一為 checkLogin()，並將 Overlay 隱藏機制修復
         function checkLogin() {
             const u = document.getElementById('loginUser').value.trim().toLowerCase(); // 自動轉小寫防呆
             const p = document.getElementById('loginPass').value.trim();
             
             if(SECTOR_ACCOUNTS[u] && SECTOR_ACCOUNTS[u].pass === p) {
                 currentUser = SECTOR_ACCOUNTS[u];
-                document.getElementById('loginOverlay').style.display = 'none'; // 使用更強制的隱藏方式
+                // 使用 display: none 確保視窗徹底消失
+                document.getElementById('loginOverlay').style.setProperty('display', 'none', 'important'); 
                 document.getElementById('mainContent').classList.remove('opacity-0');
                 document.getElementById('userBadge').innerText = currentUser.role;
                 initSystem();
