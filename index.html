@@ -33,10 +33,10 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-600 mb-1">密碼 (Password)</label>
-                    <input type="password" id="loginPass" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:border-[#FF5000]" placeholder="请输入密码">
+                    <input type="password" id="loginPass" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:border-[#FF5000]" placeholder="請輸入密碼">
                 </div>
                 <div id="loginError" class="text-xs text-red-500 font-bold hidden">❌ 帳號或密碼輸入錯誤，請重新輸入！</div>
-                <button onclick="checkLogin()" class="w-full bg-[#FF5000] hover:bg-[#e04500] text-white font-bold py-2.5 rounded-lg text-sm shadow transition-all">
+                <button type="button" onclick="checkLogin()" class="w-full bg-[#FF5000] hover:bg-[#e04500] text-white font-bold py-2.5 rounded-lg text-sm shadow transition-all cursor-pointer">
                     登入認證系統
                 </button>
             </div>
@@ -305,14 +305,14 @@
         let monthChartInstance = null;
         let weekChartInstance = null;
 
-        // 嚴格權限登入驗證
+        // 嚴格權限與防呆登入驗證
         function checkLogin() {
-            const u = document.getElementById('loginUser').value.trim();
-            const p = document.getElementById('loginPass').value;
+            const u = document.getElementById('loginUser').value.trim().toLowerCase(); // 自動轉小寫防呆
+            const p = document.getElementById('loginPass').value.trim();
             
             if(SECTOR_ACCOUNTS[u] && SECTOR_ACCOUNTS[u].pass === p) {
                 currentUser = SECTOR_ACCOUNTS[u];
-                document.getElementById('loginOverlay').classList.add('hidden');
+                document.getElementById('loginOverlay').style.display = 'none'; // 使用更強制的隱藏方式
                 document.getElementById('mainContent').classList.remove('opacity-0');
                 document.getElementById('userBadge').innerText = currentUser.role;
                 initSystem();
@@ -520,7 +520,6 @@
             const activeItems = invoiceData.filter(o => !o.isArchived);
             const archivedItems = invoiceData.filter(o => o.isArchived);
 
-            // 根據不同登入角色，決定發票號碼、下拉選單是否唯讀
             const statusAttr = currentUser.canChangeStatus ? '' : 'disabled bg-gray-100 cursor-not-allowed';
             const invoiceAttr = currentUser.canEditInvoice ? '' : 'disabled bg-gray-100 cursor-not-allowed';
 
@@ -630,4 +629,10 @@
             if (weekChartInstance) weekChartInstance.destroy();
             weekChartInstance = new Chart(document.getElementById('weekChart').getContext('2d'), {
                 type: 'line',
-                data: { labels: Object.keys(weekMap).sort().slice(-8), datasets: [{ label: '每週趨勢', data: Object.keys(weekMap).sort().slice(-8).map(k => weekMap[k]), borderColor
+                data: { labels: Object.keys(weekMap).sort().slice(-8), datasets: [{ label: '每週趨勢', data: Object.keys(weekMap).sort().slice(-8).map(k => weekMap[k]), borderColor: '#FF5000', backgroundColor: 'rgba(255, 80, 0, 0.1)', fill: true, tension: 0.2 }] },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+    </script>
+</body>
+</html>
