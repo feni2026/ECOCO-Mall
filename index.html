@@ -69,7 +69,8 @@
                 </div>
             </div>
 
-            <div id="statusDashboard" class="grid grid-cols-2 md:grid-cols-7 gap-3 mb-5"></div>
+            <div id="statusDashboard" class="grid grid-cols-2 md:grid-cols-7 gap-3 mb-5">
+                </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-gray-100">
                 <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
@@ -162,11 +163,11 @@
                     </div>
                     <div class="md:col-span-3">
                         <label class="block text-xs font-black text-gray-700 mb-1">完整地址 (系統自動解析生成郵遞區號) *</label>
-                        <input type="text" id="address" required oninput="autoExtractZip()" class="w-full border border-gray-300 rounded p-2 text-sm font-bold focus:border-[#FF5000]" placeholder="台南市東區大學路1號">
+                        <input type="text" id="address" required onchange="autoExtractZip()" oninput="autoExtractZip()" class="w-full border border-gray-300 rounded p-2 text-sm font-bold focus:border-[#FF5000]" placeholder="台南市東區大學路1號">
                     </div>
                     <div>
                         <label class="block text-xs font-black text-gray-700 mb-1">系統對應郵編</label>
-                        <input type="text" id="zipCode" readonly class="w-full border border-gray-300 rounded p-2 text-sm bg-gray-100 font-mono font-black text-center text-[#060E9F]" placeholder="自動生成">
+                        <input type="text" id="zipCode" readonly class="w-full border border-gray-300 rounded p-2 text-sm bg-gray-100 font-mono font-black text-center text-[#060E9F]">
                     </div>
                     <div>
                         <label class="block text-xs font-black text-gray-700 mb-1">課稅別</label>
@@ -284,12 +285,13 @@
                             <th class="p-2.5 text-center w-28">協作權限</th>
                         </tr>
                     </thead>
-                    <tbody id="activeInvoiceTable" class="divide-y divide-gray-100 font-bold text-gray-700 bg-white"></tbody>
+                    <tbody id="activeInvoiceTable" class="divide-y divide-gray-100 font-bold text-gray-700 bg-white">
+                        </tbody>
                 </table>
             </div>
         </div>
 
-        <div id="archiveSection" class="bg-white/80 p-5 rounded-2xl shadow-md border border-gray-100 w-full mb-10">
+        <div id="archiveSection" class="bg-white/80 p-5 rounded-2xl shadow-sm border border-gray-200 w-full mb-10">
             <h2 class="text-sm font-black text-gray-500 mb-3 flex items-center gap-2">📦 結案歷史資料封存專區 (最高權限唯讀歷史對帳審查)</h2>
             <div class="w-full overflow-x-auto">
                 <table class="w-full text-left text-xs border border-gray-100 bg-gray-50/50 rounded-xl">
@@ -308,7 +310,8 @@
                             <th class="p-2 text-center w-20">數據還原</th>
                         </tr>
                     </thead>
-                    <tbody id="archivedInvoiceTable" class="divide-y divide-gray-100 text-gray-400 font-bold"></tbody>
+                    <tbody id="archivedInvoiceTable" class="divide-y divide-gray-100 text-gray-400 font-bold">
+                        </tbody>
                 </table>
             </div>
         </div>
@@ -331,232 +334,7 @@
             "finance": { pass: "fin2026", role: "財務部" }
         };
 
-        // 🗺️ 依據 "103.12.25-臺灣地區郵遞區號前3碼一覽表" CSV 完整轉換之對應資料庫結構
-        const postZipDb = [
-            // 臺北市
-            { city: "臺北市", dist: "中正區", code: "100" }, { city: "台北市", dist: "中正區", code: "100" },
-            { city: "臺北市", dist: "大同區", code: "103" }, { city: "台北市", dist: "大同區", code: "103" },
-            { city: "臺北市", dist: "中山區", code: "104" }, { city: "台北市", dist: "中山區", code: "104" },
-            { city: "臺北市", dist: "松山區", code: "105" }, { city: "台北市", dist: "松山區", code: "105" },
-            { city: "臺北市", dist: "大安區", code: "106" }, { city: "台北市", dist: "大安區", code: "106" },
-            { city: "臺北市", dist: "萬華區", code: "108" }, { city: "台北市", dist: "萬華區", code: "108" },
-            { city: "臺北市", dist: "信義區", code: "110" }, { city: "台北市", dist: "信義區", code: "110" },
-            { city: "臺北市", dist: "士林區", code: "111" }, { city: "台北市", dist: "士林區", code: "111" },
-            { city: "臺北市", dist: "北投區", code: "112" }, { city: "台北市", dist: "北投區", code: "112" },
-            { city: "臺北市", dist: "內湖區", code: "114" }, { city: "台北市", dist: "內湖區", code: "114" },
-            { city: "臺北市", dist: "南港區", code: "115" }, { city: "台北市", dist: "南港區", code: "115" },
-            { city: "臺北市", dist: "文山區", code: "116" }, { city: "台北市", dist: "文山區", code: "116" },
-            // 新北市
-            { city: "新北市", dist: "萬里區", code: "207" }, { city: "新北市", dist: "金山區", code: "208" },
-            { city: "新北市", dist: "板橋區", code: "220" }, { city: "新北市", dist: "汐止區", code: "221" },
-            { city: "新北市", dist: "深坑區", code: "222" }, { city: "新北市", dist: "石碇區", code: "223" },
-            { city: "新北市", dist: "瑞芳區", code: "224" }, { city: "新北市", dist: "平溪區", code: "226" },
-            { city: "新北市", dist: "雙溪區", code: "227" }, { city: "新北市", dist: "貢寮區", code: "228" },
-            { city: "新北市", dist: "新店區", code: "231" }, { city: "新北市", dist: "坪林區", code: "232" },
-            { city: "新北市", dist: "烏來區", code: "233" }, { city: "新北市", dist: "永和區", code: "234" },
-            { city: "新北市", dist: "中和區", code: "235" }, { city: "新北市", dist: "土城區", code: "236" },
-            { city: "新北市", dist: "三峽區", code: "237" }, { city: "新北市", dist: "樹林區", code: "238" },
-            { city: "新北市", dist: "鶯歌區", code: "239" }, { city: "新北市", dist: "三重區", code: "241" },
-            { city: "新北市", dist: "新莊區", code: "242" }, { city: "新北市", dist: "泰山區", code: "243" },
-            { city: "新北市", dist: "林口區", code: "244" }, { city: "新北市", dist: "蘆洲區", code: "247" },
-            { city: "新北市", dist: "五股區", code: "248" }, { city: "新北市", dist: "八里區", code: "249" },
-            { city: "新北市", dist: "淡水區", code: "251" }, { city: "新北市", dist: "三芝區", code: "252" },
-            { city: "新北市", dist: "石門區", code: "253" },
-            // 基隆市
-            { city: "基隆市", dist: "仁愛區", code: "200" }, { city: "基隆市", dist: "信義區", code: "201" },
-            { city: "基隆市", dist: "中正區", code: "202" }, { city: "基隆市", dist: "中山區", code: "203" },
-            { city: "基隆市", dist: "安樂區", code: "204" }, { city: "基隆市", dist: "暖暖區", code: "205" },
-            { city: "基隆市", dist: "七堵區", code: "206" },
-            // 桃園市
-            { city: "桃園市", dist: "桃園區", code: "330" }, { city: "桃園市", dist: "中壢區", code: "320" },
-            { city: "桃園市", dist: "大溪區", code: "335" }, { city: "桃園市", dist: "楊梅區", code: "326" },
-            { city: "桃園市", dist: "蘆竹區", code: "338" }, { city: "桃園市", dist: "大園區", code: "337" },
-            { city: "桃園市", dist: "龜山區", code: "333" }, { city: "桃園市", dist: "八德區", code: "334" },
-            { city: "桃園市", dist: "龍潭區", code: "325" }, { city: "桃園市", dist: "平鎮區", code: "324" },
-            { city: "桃園市", dist: "新屋區", code: "327" }, { city: "桃園市", dist: "觀音區", code: "328" },
-            { city: "桃園市", dist: "復興區", code: "336" },
-            // 新竹市 & 新竹縣
-            { city: "新竹市", dist: "新竹市", code: "300" },
-            { city: "新竹縣", dist: "竹北市", code: "302" }, { city: "新竹縣", dist: "湖口鄉", code: "303" },
-            { city: "新竹縣", dist: "新豐鄉", code: "304" }, { city: "新竹縣", dist: "新埔鎮", code: "305" },
-            { city: "新竹縣", dist: "關西鎮", code: "306" }, { city: "新竹縣", dist: "芎林鄉", code: "307" },
-            { city: "新竹縣", dist: "寶山鄉", code: "308" }, { city: "新竹縣", dist: "竹東鎮", code: "310" },
-            { city: "新竹縣", dist: "五峰鄉", code: "311" }, { city: "新竹縣", dist: "橫山鄉", code: "312" },
-            { city: "新竹縣", dist: "尖石鄉", code: "313" }, { city: "新竹縣", dist: "北埔鄉", code: "314" },
-            { city: "新竹縣", dist: "峨眉鄉", code: "315" },
-            // 臺中市
-            { city: "臺中市", dist: "中區", code: "400" }, { city: "台中市", dist: "中區", code: "400" },
-            { city: "臺中市", dist: "東區", code: "401" }, { city: "台中市", dist: "東區", code: "401" },
-            { city: "臺中市", dist: "南區", code: "402" }, { city: "台中市", dist: "南區", code: "402" },
-            { city: "臺中市", dist: "西區", code: "403" }, { city: "台中市", dist: "西區", code: "403" },
-            { city: "臺中市", dist: "北區", code: "404" }, { city: "台中市", dist: "北區", code: "404" },
-            { city: "臺中市", dist: "北屯區", code: "406" }, { city: "台中市", dist: "北屯區", code: "406" },
-            { city: "臺中市", dist: "西屯區", code: "407" }, { city: "台中市", dist: "西屯區", code: "407" },
-            { city: "臺中市", dist: "南屯區", code: "408" }, { city: "台中市", dist: "南屯區", code: "408" },
-            { city: "臺中市", dist: "太平區", code: "411" }, { city: "台中市", dist: "太平區", code: "411" },
-            { city: "臺中市", dist: "大里區", code: "412" }, { city: "台中市", dist: "大里區", code: "412" },
-            { city: "臺中市", dist: "霧峰區", code: "413" }, { city: "台中市", dist: "霧峰區", code: "413" },
-            { city: "臺中市", dist: "烏日區", code: "414" }, { city: "台中市", dist: "烏日區", code: "414" },
-            { city: "臺中市", dist: "豐原區", code: "420" }, { city: "台中市", dist: "豐原區", code: "420" },
-            { city: "臺中市", dist: "后里區", code: "421" }, { city: "台中市", dist: "后里區", code: "421" },
-            { city: "臺中市", dist: "石岡區", code: "422" }, { city: "台中市", dist: "石岡區", code: "422" },
-            { city: "臺中市", dist: "東勢區", code: "423" }, { city: "台中市", dist: "東勢區", code: "423" },
-            { city: "臺中市", dist: "和平區", code: "424" }, { city: "台中市", dist: "和平區", code: "424" },
-            { city: "臺中市", dist: "新社區", code: "426" }, { city: "台中市", dist: "新社區", code: "426" },
-            { city: "臺中市", dist: "潭子區", code: "427" }, { city: "台中市", dist: "潭子區", code: "427" },
-            { city: "臺中市", dist: "大雅區", code: "428" }, { city: "台中市", dist: "大雅區", code: "428" },
-            { city: "臺中市", dist: "神岡區", code: "429" }, { city: "台中市", dist: "神岡區", code: "429" },
-            { city: "臺中市", dist: "大肚區", code: "432" }, { city: "台中市", dist: "大肚區", code: "432" },
-            { city: "臺中市", dist: "沙鹿區", code: "433" }, { city: "台中市", dist: "沙鹿區", code: "433" },
-            { city: "臺中市", dist: "龍井區", code: "434" }, { city: "台中市", dist: "龍井區", code: "434" },
-            { city: "臺中市", dist: "梧棲區", code: "435" }, { city: "台中市", dist: "梧棲區", code: "435" },
-            { city: "臺中市", dist: "清水區", code: "436" }, { city: "台中市", dist: "清水區", code: "436" },
-            { city: "臺中市", dist: "大甲區", code: "437" }, { city: "台中市", dist: "大甲區", code: "437" },
-            { city: "臺中市", dist: "外埔區", code: "438" }, { city: "台中市", dist: "外埔區", code: "438" },
-            { city: "臺中市", dist: "大安區", code: "439" }, { city: "台中市", dist: "大安區", code: "439" },
-            // 彰化縣
-            { city: "彰化縣", dist: "彰化市", code: "500" }, { city: "彰化縣", dist: "芬園鄉", code: "502" },
-            { city: "彰化縣", dist: "花壇鄉", code: "503" }, { city: "彰化縣", dist: "秀水鄉", code: "504" },
-            { city: "彰化縣", dist: "鹿港鎮", code: "505" }, { city: "彰化縣", dist: "福興鄉", code: "506" },
-            { city: "彰化縣", dist: "線西鄉", code: "507" }, { city: "彰化縣", dist: "伸港鄉", code: "508" },
-            { city: "彰化縣", dist: "和美鎮", code: "509" }, { city: "彰化縣", dist: "員林市", code: "510" },
-            { city: "彰化縣", dist: "員林鎮", code: "510" }, { city: "彰化縣", dist: "社頭鄉", code: "511" },
-            { city: "彰化縣", dist: "永靖鄉", code: "512" }, { city: "彰化縣", dist: "埔心鄉", code: "513" },
-            { city: "彰化縣", dist: "溪湖鎮", code: "514" }, { city: "彰化縣", dist: "大村鄉", code: "515" },
-            { city: "彰化縣", dist: "埔鹽鄉", code: "516" }, { city: "彰化縣", dist: "田中鎮", code: "520" },
-            { city: "彰化縣", dist: "社頭鄉", code: "511" }, { city: "彰化縣", dist: "田尾鄉", code: "522" },
-            { city: "彰化縣", dist: "埤頭鄉", code: "523" }, { city: "彰化縣", dist: "溪州鄉", code: "524" },
-            { city: "彰化縣", dist: "竹塘鄉", code: "525" }, { city: "彰化縣", dist: "二林鎮", code: "526" },
-            { city: "彰化縣", dist: "大城鄉", code: "527" }, { city: "彰化縣", dist: "芳苑鄉", code: "528" },
-            { city: "彰化縣", dist: "二水鄉", code: "530" },
-            // 南投縣
-            { city: "南投縣", dist: "南投市", code: "540" }, { city: "南投縣", dist: "中興新村", code: "540" },
-            { city: "南投縣", dist: "草屯鎮", code: "542" }, { city: "南投縣", dist: "國姓鄉", code: "544" },
-            { city: "南投縣", dist: "埔里鎮", code: "545" }, { city: "南投縣", dist: "仁愛鄉", code: "546" },
-            { city: "南投縣", dist: "名間鄉", code: "551" }, { city: "南投縣", dist: "集集鎮", code: "552" },
-            { city: "南投縣", dist: "水里鄉", code: "553" }, { city: "南投縣", dist: "魚池鄉", code: "555" },
-            { city: "南投縣", dist: "信義鄉", code: "556" }, { city: "南投縣", dist: "竹山鎮", code: "557" },
-            { city: "南投縣", dist: "鹿谷鄉", code: "558" },
-            // 雲林縣
-            { city: "雲林縣", dist: "斗六市", code: "640" }, { city: "雲林縣", dist: "林內鄉", code: "643" },
-            { city: "雲林縣", dist: "古坑鄉", code: "646" }, { city: "雲林縣", dist: "莿桐鄉", code: "647" },
-            { city: "雲林縣", dist: "西螺鎮", code: "648" }, { city: "雲林縣", dist: "二崙鄉", code: "649" },
-            { city: "雲林縣", dist: "崙背鄉", code: "651" }, { city: "雲林縣", dist: "麥寮鄉", code: "652" },
-            { city: "雲林縣", dist: "臺西鄉", code: "653" }, { city: "雲林縣", dist: "台西鄉", code: "653" },
-            { city: "雲林縣", dist: "東勢鄉", code: "654" }, { city: "雲林縣", dist: "褒忠鄉", code: "655" },
-            { city: "雲林縣", dist: "土庫鎮", code: "633" }, { city: "雲林縣", dist: "虎尾鎮", code: "632" },
-            { city: "雲林縣", dist: "元長鄉", code: "655" }, { city: "雲林縣", dist: "四湖鄉", code: "654" },
-            { city: "雲林縣", dist: "口湖鄉", code: "653" }, { city: "雲林縣", dist: "水林鄉", code: "652" },
-            { city: "雲林縣", dist: "北港鎮", code: "651" }, { city: "雲林縣", dist: "大埤鄉", code: "631" },
-            // 嘉義市 & 嘉義縣
-            { city: "嘉義市", dist: "嘉義市", code: "600" }, { city: "嘉義市", dist: "東區", code: "600" }, { city: "嘉義市", dist: "西區", code: "600" },
-            { city: "嘉義縣", dist: "番路鄉", code: "602" }, { city: "嘉義縣", dist: "梅山鄉", code: "603" },
-            { city: "嘉義縣", dist: "竹崎鄉", code: "604" }, { city: "嘉義縣", dist: "阿里山鄉", code: "605" },
-            { city: "嘉義縣", dist: "中埔鄉", code: "606" }, { city: "嘉義縣", dist: "大埔鄉", code: "607" },
-            { city: "嘉義縣", dist: "水上鄉", code: "608" }, { city: "嘉義縣", dist: "鹿草鄉", code: "611" },
-            { city: "嘉義縣", dist: "太保市", code: "612" }, { city: "嘉義縣", dist: "朴子市", code: "613" },
-            { city: "嘉義縣", dist: "東石鄉", code: "614" }, { city: "嘉義縣", dist: "六腳鄉", code: "615" },
-            { city: "嘉義縣", dist: "新港鄉", code: "616" }, { city: "嘉義縣", dist: "民雄鄉", code: "621" },
-            { city: "嘉義縣", dist: "大林鎮", code: "622" }, { city: "嘉義縣", dist: "溪口鄉", code: "623" },
-            { city: "嘉義縣", dist: "義竹鄉", code: "624" }, { city: "嘉義縣", dist: "布袋鎮", code: "625" },
-            // 臺南市
-            { city: "臺南市", dist: "中西區", code: "700" }, { city: "台南市", dist: "中西區", code: "700" },
-            { city: "臺南市", dist: "東區", code: "701" }, { city: "台南市", dist: "東區", code: "701" },
-            { city: "臺南市", dist: "南區", code: "702" }, { city: "台南市", dist: "南區", code: "702" },
-            { city: "臺南市", dist: "北區", code: "704" }, { city: "台南市", dist: "北區", code: "704" },
-            { city: "臺南市", dist: "安平區", code: "708" }, { city: "台南市", dist: "安平區", code: "708" },
-            { city: "臺南市", dist: "安南區", code: "709" }, { city: "台南市", dist: "安南區", code: "709" },
-            { city: "臺南市", dist: "永康區", code: "710" }, { city: "台南市", dist: "永康區", code: "710" },
-            { city: "臺南市", dist: "歸仁區", code: "711" }, { city: "台南市", dist: "歸仁區", code: "711" },
-            { city: "臺南市", dist: "新化區", code: "712" }, { city: "台南市", dist: "新化區", code: "712" },
-            { city: "臺南市", dist: "左鎮區", code: "713" }, { city: "台南市", dist: "左鎮區", code: "713" },
-            { city: "臺南市", dist: "玉井區", code: "714" }, { city: "台南市", dist: "玉井區", code: "714" },
-            { city: "臺南市", dist: "楠西區", code: "715" }, { city: "台南市", dist: "楠西區", code: "715" },
-            { city: "臺南市", dist: "南化區", code: "716" }, { city: "台南市", dist: "南化區", code: "716" },
-            { city: "臺南市", dist: "仁德區", code: "717" }, { city: "台南市", dist: "仁德區", code: "717" },
-            { city: "臺南市", dist: "關廟區", code: "718" }, { city: "台南市", dist: "關廟區", code: "718" },
-            { city: "臺南市", dist: "龍崎區", code: "719" }, { city: "台南市", dist: "龍崎區", code: "719" },
-            { city: "臺南市", dist: "官田區", code: "720" }, { city: "台南市", dist: "官田區", code: "720" },
-            { city: "臺南市", dist: "麻豆區", code: "721" }, { city: "台南市", dist: "麻豆區", code: "721" },
-            { city: "臺南市", dist: "佳里區", code: "722" }, { city: "台南市", dist: "佳里區", code: "722" },
-            { city: "臺南市", dist: "西港區", code: "723" }, { city: "台南市", dist: "西港區", code: "723" },
-            { city: "臺南市", dist: "七股區", code: "724" }, { city: "台南市", dist: "七股區", code: "724" },
-            { city: "臺南市", dist: "將軍區", code: "725" }, { city: "台南市", dist: "將軍區", code: "725" },
-            { city: "臺南市", dist: "學甲區", code: "726" }, { city: "台南市", dist: "學甲區", code: "726" },
-            { city: "臺南市", dist: "北門區", code: "727" }, { city: "台南市", dist: "北門區", code: "727" },
-            { city: "臺南市", dist: "新營區", code: "730" }, { city: "台南市", dist: "新營區", code: "730" },
-            { city: "臺南市", dist: "後壁區", code: "731" }, { city: "台南市", dist: "後壁區", code: "731" },
-            { city: "臺南市", dist: "白河區", code: "732" }, { city: "台南市", dist: "白河區", code: "732" },
-            { city: "臺南市", dist: "東山區", code: "733" }, { city: "台南市", dist: "東山區", code: "733" },
-            { city: "臺南市", dist: "六甲區", code: "734" }, { city: "台南市", dist: "六甲區", code: "734" },
-            { city: "臺南市", dist: "下營區", code: "735" }, { city: "台南市", dist: "下營區", code: "735" },
-            { city: "臺南市", dist: "柳營區", code: "736" }, { city: "台南市", dist: "柳營區", code: "736" },
-            { city: "臺南市", dist: "鹽水區", code: "737" }, { city: "台南市", dist: "鹽水區", code: "737" },
-            // 高雄市
-            { city: "高雄市", dist: "新興區", code: "800" }, { city: "高雄市", dist: "前金區", code: "801" },
-            { city: "高雄市", dist: "苓雅區", code: "802" }, { city: "高雄市", dist: "鹽埕區", code: "803" },
-            { city: "高雄市", dist: "鼓山區", code: "804" }, { city: "高雄市", dist: "旗津區", code: "805" },
-            { city: "高雄市", dist: "前鎮區", code: "806" }, { city: "高雄市", dist: "三民區", code: "807" },
-            { city: "高雄市", dist: "楠梓區", code: "811" }, { city: "高雄市", dist: "小港區", code: "812" },
-            { city: "高雄市", dist: "左營區", code: "813" }, { city: "高雄市", dist: "仁武區", code: "814" },
-            { city: "高雄市", dist: "大社區", code: "815" }, { city: "高雄市", dist: "岡山區", code: "820" },
-            { city: "高雄市", dist: "路竹區", code: "821" }, { city: "高雄市", dist: "阿蓮區", code: "822" },
-            { city: "高雄市", dist: "田寮區", code: "823" }, { city: "高雄市", dist: "燕巢區", code: "824" },
-            { city: "高雄市", dist: "橋頭區", code: "825" }, { city: "高雄市", dist: "梓官區", code: "826" },
-            { city: "高雄市", dist: "彌陀區", code: "827" }, { city: "高雄市", dist: "永安區", code: "828" },
-            { city: "高雄市", dist: "茄萣區", code: "829" }, { city: "高雄市", dist: "鳳山區", code: "830" },
-            { city: "高雄市", dist: "大樹區", code: "831" }, { city: "高雄市", dist: "鳥松區", code: "832" },
-            { city: "高雄市", dist: "林園區", code: "833" }, { city: "高雄市", dist: "大寮區", code: "834" },
-            { city: "高雄市", dist: "旗山區", code: "842" }, { city: "高雄市", dist: "美濃區", code: "843" },
-            { city: "高雄市", dist: "六龜區", code: "844" }, { city: "高雄市", dist: "內門區", code: "845" },
-            { city: "高雄市", dist: "杉林區", code: "846" }, { city: "高雄市", dist: "甲仙區", code: "847" },
-            { city: "高雄市", dist: "桃源區", code: "848" }, { city: "高雄市", dist: "那瑪夏區", code: "849" },
-            { city: "高雄市", dist: "茂林區", code: "851" }, { city: "高雄市", dist: "茄萣區", code: "829" },
-            // 屏東縣
-            { city: "屏東縣", dist: "屏東市", code: "900" }, { city: "屏東縣", dist: "三地門鄉", code: "901" },
-            { city: "屏東縣", dist: "霧臺鄉", code: "902" }, { city: "屏東縣", dist: "瑪家鄉", code: "903" },
-            { city: "屏東縣", dist: "九如鄉", code: "904" }, { city: "屏東縣", dist: "里港鄉", code: "905" },
-            { city: "屏東縣", dist: "高樹鄉", code: "906" }, { city: "屏東縣", dist: "鹽埔鄉", code: "907" },
-            { city: "屏東縣", dist: "長治鄉", code: "908" }, { city: "屏東縣", dist: "麟洛鄉", code: "909" },
-            { city: "屏東縣", dist: "竹田鄉", code: "911" }, { city: "屏東縣", dist: "內埔鄉", code: "912" },
-            { city: "屏東縣", dist: "萬丹鄉", code: "913" }, { city: "屏東縣", dist: "潮州鎮", code: "920" },
-            { city: "屏東縣", dist: "泰武鄉", code: "921" }, { city: "屏東縣", dist: "來義鄉", code: "922" },
-            { city: "屏東縣", dist: "萬巒鄉", code: "923" }, { city: "屏東縣", dist: "崁頂鄉", code: "924" },
-            { city: "屏東縣", dist: "新埤鄉", code: "925" }, { city: "屏東縣", dist: "南州鄉", code: "926" },
-            { city: "屏東縣", dist: "林邊鄉", code: "927" }, { city: "屏東縣", dist: "東港鎮", code: "928" },
-            { city: "屏東縣", dist: "琉球鄉", code: "929" }, { city: "屏東縣", dist: "佳冬鄉", code: "931" },
-            { city: "屏東縣", dist: "枋寮鄉", code: "932" }, { city: "屏東縣", dist: "枋山鄉", code: "941" },
-            { city: "屏東縣", dist: "春日鄉", code: "942" }, { city: "屏東縣", dist: "獅子鄉", code: "943" },
-            { city: "屏東縣", dist: "車城鄉", code: "944" }, { city: "屏東縣", dist: "牡丹鄉", code: "945" },
-            { city: "屏東縣", dist: "恆春鎮", code: "946" }, { city: "屏東縣", dist: "滿州鄉", code: "947" },
-            // 臺東縣
-            { city: "臺東縣", dist: "臺東市", code: "950" }, { city: "台東縣", dist: "台東市", code: "950" },
-            { city: "臺東縣", dist: "綠島鄉", code: "951" }, { city: "臺東縣", dist: "蘭嶼鄉", code: "952" },
-            { city: "臺東縣", dist: "延平鄉", code: "953" }, { city: "臺東縣", dist: "卑南鄉", code: "954" },
-            { city: "臺東縣", dist: "鹿野鄉", code: "955" }, { city: "臺東縣", dist: "關山鎮", code: "956" },
-            { city: "臺東縣", dist: "海端鄉", code: "957" }, { city: "臺東縣", dist: "池上鄉", code: "958" },
-            { city: "臺東縣", dist: "東河鄉", code: "959" }, { city: "臺東縣", dist: "成功鎮", code: "961" },
-            { city: "臺東縣", dist: "長濱鄉", code: "962" }, { city: "臺東縣", dist: "太麻里鄉", code: "963" },
-            { city: "臺東縣", dist: "金峰鄉", code: "964" }, { city: "臺東縣", dist: "大武鄉", code: "965" },
-            { city: "臺東縣", dist: "達仁鄉", code: "966" },
-            // 花蓮縣
-            { city: "花蓮縣", dist: "花蓮市", code: "970" }, { city: "花蓮縣", dist: "新城鄉", code: "971" },
-            { city: "花蓮縣", dist: "秀林鄉", code: "972" }, { city: "花蓮縣", dist: "吉安鄉", code: "973" },
-            { city: "花蓮縣", dist: "壽豐鄉", code: "974" }, { city: "花蓮縣", dist: "鳳林鎮", code: "975" },
-            { city: "花蓮縣", dist: "光復鄉", code: "976" }, { city: "花蓮縣", dist: "豐濱鄉", code: "977" },
-            { city: "花蓮縣", dist: "瑞穗鄉", code: "978" }, { city: "花蓮縣", dist: "萬榮鄉", code: "979" },
-            { city: "花蓮縣", dist: "玉里鎮", code: "981" }, { city: "花蓮縣", dist: "卓溪鄉", code: "982" },
-            { city: "花蓮縣", dist: "富里鄉", code: "983" },
-            // 離島 & 其它
-            { city: "澎湖縣", dist: "馬公市", code: "880" }, { city: "澎湖縣", dist: "西嶼鄉", code: "881" },
-            { city: "澎湖縣", dist: "望安鄉", code: "882" }, { city: "澎湖縣", dist: "七美鄉", code: "883" },
-            { city: "澎湖縣", dist: "白沙鄉", code: "884" }, { city: "澎湖縣", dist: "湖西鄉", code: "885" },
-            { city: "金門縣", dist: "金沙鎮", code: "890" }, { city: "金門縣", dist: "金湖鎮", code: "891" },
-            { city: "金門縣", dist: "金寧鄉", code: "892" }, { city: "金門縣", dist: "金城鎮", code: "893" },
-            { city: "金門縣", dist: "烈嶼鄉", code: "894" }, { city: "金門縣", dist: "烏坵鄉", code: "896" },
-            { city: "連江縣", dist: "南竿鄉", code: "209" }, { city: "連江縣", dist: "北竿鄉", code: "210" },
-            { city: "連江縣", dist: "莒光鄉", code: "211" }, { city: "連江縣", dist: "東引鄉", code: "212" }
-        ];
+        const ZIP_DB = {"臺北市中正區": "100", "臺北市大同區": "103", "臺北市中山區": "104", "臺北市松山區": "105", "臺北市大安區": "106", "臺北市萬華區": "108", "臺北市信義區": "110", "臺北市士林區": "111", "臺北市北投區": "112", "臺北市內湖區": "114", "臺北市南港區": "115", "臺北市文山區": "116", "基隆市仁愛區": "200", "基隆市信義區": "201", "基隆市中正區": "202", "基隆市中山區": "203", "基隆市安樂區": "204", "基隆市暖暖區": "205", "基隆市七堵區": "206", "新北市萬里區": "207", "新北市金山區": "208", "新北市板橋區": "220", "新北市汐止區": "221", "新北市深坑區": "222", "新北市石碇區": "223", "新北市瑞芳區": "224", "新北市平溪區": "226", "新北市雙溪區": "227", "新北市貢寮區": "228", "新北市新店區": "231", "新北市坪林區": "232", "新北市烏來區": "233", "新北市永和區": "234", "新北市中和區": "235", "新北市土城區": "236", "新北市三峽區": "237", "新北市樹林區": "238", "新北市鶯歌區": "239", "新北市三重區": "241", "新北市新莊區": "242", "新北市泰山區": "243", "新北市林口區": "244", "新北市蘆洲區": "247", "新北市五股區": "248", "新北市八里區": "249", "新北市淡水區": "251", "新北市三芝區": "252", "新北市石門區": "253", "宜蘭縣宜蘭": "260", "宜蘭縣頭城": "261", "宜蘭縣礁溪": "262", "宜蘭縣壯圍": "263", "宜蘭縣員山": "264", "宜蘭縣羅東": "265", "宜蘭縣三星": "266", "宜蘭縣大同": "267", "宜蘭縣五結": "268", "宜蘭縣冬山": "269", "宜蘭縣蘇澳": "270", "宜蘭縣南澳": "272", "宜蘭縣釣魚臺列嶼": "290", "新竹縣竹北": "302", "新竹縣湖口": "303", "新竹縣新豐": "304", "新竹縣新埔": "305", "新竹縣關西": "306", "新竹縣芎林": "307", "新竹縣寶山": "308", "新竹縣竹東": "310", "新竹縣五峰": "311", "新竹縣橫山": "312", "新竹縣尖石": "313", "新竹縣北埔": "314", "新竹縣峨眉": "315", "桃園市中壢區": "320", "桃園市平鎮區": "324", "桃園市龍潭區": "325", "桃園市楊梅區": "326", "桃園市新屋區": "327", "桃園市觀音區": "328", "桃園市桃園區": "330", "桃園市龜山區": "333", "桃園市八德區": "334", "桃園市大溪區": "335", "桃園市復興區": "336", "桃園市大園區": "337", "桃園市蘆竹區": "338", "苗栗縣竹南": "350", "苗栗縣頭份": "351", "苗栗縣三灣": "352", "苗栗縣南庄": "353", "苗栗縣獅潭": "354", "苗栗縣後龍": "356", "苗栗縣通霄": "357", "苗栗縣苑裡": "358", "苗栗縣苗栗": "360", "苗栗縣造橋": "361", "苗栗縣頭屋": "362", "苗栗縣公館": "363", "苗栗縣大湖": "364", "苗栗縣泰安": "365", "苗栗縣銅鑼": "366", "苗栗縣三義": "367", "苗栗縣西湖": "368", "苗栗縣卓蘭": "369", "臺中市中區": "400", "臺中市東區": "401", "臺中市南區": "402", "臺中市西區": "403", "臺中市北區": "404", "臺中市北屯區": "406", "臺中市西屯區": "407", "臺中市南屯區": "408", "臺中市太平區": "411", "臺中市大里區": "412", "臺中市霧峰區": "413", "臺中市烏日區": "414", "臺中市豐原區": "420", "臺中市后里區": "421", "臺中市石岡區": "422", "臺中市東勢區": "423", "臺中市和平區": "424", "彰化縣彰化": "500", "彰化縣芬園": "502", "彰化縣花壇": "503", "彰化縣秀水": "504", "彰化縣鹿港": "505", "彰化縣福興": "506", "彰化縣線西": "507", "彰化縣和美": "508", "彰化縣伸港": "509", "彰化縣員林": "510", "彰化縣社頭": "511", "彰化縣永靖": "512", "彰化縣埔心": "513", "彰化縣溪湖": "514", "彰化縣大村": "515", "彰化縣埔鹽": "516", "彰化縣田中": "520", "彰化縣北斗": "521", "彰化縣田尾": "522", "彰化縣埤頭": "523", "彰化縣溪州": "524", "彰化縣竹塘": "525", "彰化縣二林": "526", "彰化縣大城": "527", "彰化縣芳苑": "528", "彰化縣二水": "530", "南投縣南投": "540", "南投縣中寮": "541", "南投縣草屯": "542", "南投縣國姓": "544", "南投縣埔里": "545", "南投縣仁愛": "546", "南投縣名間": "551", "南投縣集集": "552", "南投縣水里": "553", "南投縣魚池": "555", "南投縣信義": "556", "南投縣竹山": "557", "南投縣鹿谷": "558", "南投縣嘉義市": "600", "嘉義縣番路": "602", "嘉義縣梅山": "603", "嘉義縣竹崎": "604", "嘉義縣阿里山": "605", "嘉義縣中埔": "606", "嘉義縣大埔": "607", "嘉義縣水上": "608", "嘉義縣鹿草": "611", "嘉義縣太保": "612", "嘉義縣朴子": "613", "嘉義縣東石": "614", "雲林縣斗南": "630", "雲林縣大埤": "631", "雲林縣虎尾": "632", "雲林縣土庫": "633", "雲林縣褒忠": "634", "雲林縣東勢": "635", "雲林縣臺西": "636", "雲林縣崙背": "637", "雲林縣麥寮": "638", "雲林縣斗六": "640", "雲林縣林內": "643", "雲林縣古坑": "646", "雲林縣莿桐": "647", "雲林縣西螺": "648", "雲林縣二崙": "649", "雲林縣北港": "651", "雲林縣水林": "652", "雲林縣口湖": "653", "雲林縣四湖": "654", "雲林縣元長": "655", "臺南市中西區": "700", "臺南市東區": "701", "臺南市南區": "702", "臺南市北區": "704", "臺南市安平區": "708", "臺南市安南區": "709", "臺南市永康區": "710", "臺南市歸仁區": "711", "臺南市新化區": "712", "臺南市左鎮區": "713", "臺南市玉井區": "714", "臺南市楠西區": "715", "臺南市南化區": "716", "臺南市仁德區": "717", "臺南市關廟區": "718", "臺南市龍崎區": "719", "臺南市官田區": "720", "臺南市麻豆區": "721", "臺南市佳里區": "722", "臺南市西港區": "723", "臺南市七股區": "724", "臺南市將軍區": "725", "臺南市學甲區": "726", "臺南市北門區": "727", "臺南市新營區": "730", "臺南市後壁區": "731", "臺南市白河區": "732", "臺南市東山區": "733", "臺南市六甲區": "734", "臺南市下營區": "735", "臺南市柳營區": "736", "臺南市鹽水區": "737", "臺南市善化區": "741", "臺南市大內區": "742", "臺南市山上區": "743", "臺南市新市區": "744", "臺南市安定區": "745", "高雄市新興區": "800", "高雄市前金區": "801", "高雄市苓雅區": "802", "高雄市鹽埕區": "803", "高雄市鼓山區": "804", "高雄市旗津區": "805", "高雄市前鎮區": "806", "高雄市三民區": "807", "高雄市楠梓區": "811", "高雄市小港區": "812", "高雄市左營區": "813", "高雄市仁武區": "814", "高雄市大社區": "815", "高雄市岡山區": "820", "高雄市路竹區": "821", "高雄市阿蓮區": "822", "高雄市田寮區": "823", "高雄市燕巢區": "824", "高雄市橋頭區": "825", "高雄市梓官區": "826", "高雄市彌陀區": "827", "高雄市永安區": "828", "高雄市湖內區": "829", "高雄市鳳山區": "830", "高雄市大寮區": "831", "高雄市林園區": "832", "高雄市鳥松區": "833", "高雄市大樹區": "840", "高雄市旗山區": "842", "高雄市美濃區": "843", "高雄市六龜區": "844", "高雄市內門區": "845", "高雄市杉林區": "846", "高雄市甲仙區": "847", "高雄市桃源區": "848", "高雄市那瑪夏區": "849", "高雄市茂林區": "851", "高雄市茄萣區": "852", "南海諸島東沙": "817", "南海諸島南沙": "819", "澎湖縣馬公": "880", "澎湖縣西嶼": "881", "澎湖縣望安": "882", "澎湖縣七美": "883", "澎湖縣白沙": "884", "澎湖縣湖西": "885", "屏東縣屏東": "900", "屏東縣三地門": "901", "屏東縣霧臺": "902", "屏東縣瑪家": "903", "屏東縣九如": "904", "屏東縣里港": "905", "屏東縣高樹": "906", "屏東縣鹽埔": "907", "屏東縣長治": "908", "屏東縣麟洛": "909", "屏東縣竹田": "911", "屏東縣內埔": "912", "屏東縣萬丹": "913", "屏東縣潮州": "920", "屏東縣泰武": "921", "屏東縣來義": "922", "臺東縣臺東": "950", "臺東縣綠島": "951", "臺東縣蘭嶼": "952", "臺東縣延平": "953", "臺東縣卑南": "954", "臺東縣鹿野": "955", "臺東縣關山": "956", "臺東縣海端": "957", "臺東縣池上": "958", "臺東縣東河": "959", "臺東縣成功": "961", "臺東縣長濱": "962", "臺東縣太麻里": "963", "臺東縣金峰": "964", "臺東縣大武": "965", "臺東縣達仁": "966", "花蓮縣花蓮": "970", "花蓮縣新城": "971", "花蓮縣秀林": "972", "花蓮縣吉安": "973", "花蓮縣壽豐": "974", "花蓮縣鳳林": "975", "花蓮縣光復": "976", "花蓮縣豐濱": "977", "花蓮縣瑞穗": "978", "花蓮縣萬榮": "979", "花蓮縣玉里": "981", "花蓮縣卓溪": "982", "花蓮縣富里": "983", "金門縣金沙": "890", "金門縣金湖": "891", "金門縣金寧": "892", "金門縣金城": "893", "金門縣烈嶼": "894", "金門縣烏坵": "896", "連江縣南竿": "209", "連江縣北竿": "210", "連江縣莒光": "211", "連江縣東引": "212"};
 
         let currentUserRole = ""; 
         let customProducts = JSON.parse(localStorage.getItem('ecoco_p_v6')) || ["ECOCO 經典隨行杯", "智慧綠能循環造型悠遊卡", "線上永續碳盤查基礎證照課程"];
@@ -648,33 +426,32 @@
             }
         }
 
-        // 🚀 精準解析 CSV 地址對應郵遞區號核心函數 (支援即時 oninput 監聽)
         function autoExtractZip() {
-            const addr = document.getElementById('address').value.trim();
-            let matchedCode = ""; 
-            
-            if (addr.length >= 3) {
-                // 先嘗試完整比對 縣市+行政區 (例如: 台南市東區、臺北市中正區)
-                for(let item of postZipDb) {
-                    if(addr.includes(item.city) && addr.includes(item.dist)) {
-                        matchedCode = item.code;
+            const raw = document.getElementById('address').value.trim();
+            // Normalize 台->臺 variants for lookup
+            const addr = raw.replace(/台北/g,'臺北').replace(/台南/g,'臺南').replace(/台中/g,'臺中').replace(/台東/g,'臺東').replace(/台西/g,'臺西');
+            let zip = '';
+            // Try city+district match (most specific)
+            for (const key of Object.keys(ZIP_DB)) {
+                // key is like 臺南市東區
+                // Check if address contains both the city part and district part
+                if (addr.includes(key)) {
+                    zip = ZIP_DB[key];
+                    break;
+                }
+            }
+            // Fallback: match city+district separately
+            if (!zip) {
+                for (const key of Object.keys(ZIP_DB)) {
+                    const cityPart = key.slice(0, 3);   // e.g. 臺南市
+                    const distPart = key.slice(3);       // e.g. 東區
+                    if (addr.includes(cityPart) && addr.includes(distPart)) {
+                        zip = ZIP_DB[key];
                         break;
                     }
                 }
-                
-                // 如果使用者沒輸入縣市，只輸入行政區 (例如: 東區、關廟區) 的模糊防呆比對
-                if (!matchedCode) {
-                    for(let item of postZipDb) {
-                        if(addr.includes(item.dist)) {
-                            matchedCode = item.code;
-                            break;
-                        }
-                    }
-                }
             }
-            
-            // 寫入系統對應郵編欄位 (若查無匹配，則清空等待完整輸入)
-            document.getElementById('zipCode').value = matchedCode;
+            document.getElementById('zipCode').value = zip;
         }
 
         function addProductRow() {
@@ -731,7 +508,7 @@
             }
 
             const editId = document.getElementById('editRowId').value;
-            const applyDateVal = document.getElementById('applyDate').value; 
+            const applyDateVal = document.getElementById('filterDate').value; 
             const d = new Date(applyDateVal);
             
             const monthStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
@@ -781,7 +558,34 @@
             resetForm();
             renderTable();
             updateDashboard();
-            alert("💾 資料儲存成功！");
+        }
+
+        function loadEditRow(id) {
+            const item = invoiceData.find(o => o.id == id);
+            if(item) {
+                document.getElementById('editRowId').value = item.id;
+                document.getElementById('orderId').value = item.orderId;
+                document.getElementById('applyDate').value = item.applyDate;
+                document.getElementById('picker').value = item.picker;
+                document.getElementById('payMethod').value = item.payMethod;
+                document.getElementById('invType').value = item.invType;
+                document.getElementById('carrierType').value = item.carrierType;
+                document.getElementById('carrierNo').value = item.carrierNo;
+                document.getElementById('custName').value = item.custName;
+                document.getElementById('custEmail').value = item.custEmail;
+                document.getElementById('custPhone').value = item.custPhone;
+                document.getElementById('address').value = item.address;
+                document.getElementById('zipCode').value = item.zip;
+                document.getElementById('taxType').value = item.taxType;
+                document.getElementById('memo').value = item.memo;
+
+                currentFormProducts = [...item.products];
+                renderTempProductTable();
+
+                document.getElementById('editingBadge').classList.remove('hidden');
+                document.getElementById('cancelEditBtn').classList.remove('hidden');
+                window.scrollTo({top: document.getElementById('marketingSection').offsetTop - 20, behavior: 'smooth'});
+            }
         }
 
         function resetForm() {
@@ -789,39 +593,209 @@
             document.getElementById('editRowId').value = "";
             currentFormProducts = [];
             renderTempProductTable();
-            document.getElementById('applyDate').value = "2026-06-24";
             document.getElementById('editingBadge').classList.add('hidden');
             document.getElementById('cancelEditBtn').classList.add('hidden');
-            document.getElementById('submitFormBtn').innerText = "💾 提交發票開立申請";
         }
 
-        // 以下為其餘系統必備的渲染與圖表邏輯存根（確保系統完整運作）
-        function handleDateFilterChange() { renderTable(); updateDashboard(); }
-        function updateDashboard() { /* 儀表板與 Chart.js 渲染邏輯 */ }
-        function renderTable() {
-            const activeTbody = document.getElementById('activeInvoiceTable');
-            if (activeTbody) {
-                activeTbody.innerHTML = invoiceData.filter(item => !item.isArchived).map((item, idx) => `
-                    <tr class="border-b border-gray-100 hover:bg-gray-50">
-                        <td class="p-2 text-center">${idx + 1}</td>
-                        <td class="p-2 text-amber-600">${item.status}</td>
-                        <td class="p-2 font-mono cursor-pointer" onclick="copyCell('${item.orderId}', this)">${item.orderId}</td>
-                        <td class="p-2">${item.applyDate}</td>
-                        <td class="p-2">${item.payMethod}</td>
-                        <td class="p-2">${item.invType} / ${item.carrierType}</td>
-                        <td class="p-2 font-mono cursor-pointer" onclick="copyCell('${item.carrierNo}', this)">${item.carrierNo || '-'}</td>
-                        <td class="p-2 cursor-pointer" onclick="copyCell('${item.custName}', this)">${item.custName || '-'}</td>
-                        <td class="p-2 text-[11px]">${item.custEmail}<br>${item.custPhone}</td>
-                        <td class="p-2 cursor-pointer text-[11px]" onclick="copyCell('${item.zip} ${item.address}', this)">
-                            <span class="text-blue-700 font-black">[${item.zip}]</span> ${item.address}
-                        </td>
-                        <td class="p-2 text-[11px]">${item.products.map(p => `${p.name}x${p.qty}`).join(', ')}</td>
-                        <td class="p-2 text-right font-mono">$${item.grandTotal}</td>
-                        <td class="p-2 font-mono">${item.invNo || '未回報'}</td>
-                        <td class="p-2 text-center text-xs">${item.picker}</td>
-                    </tr>
-                `).join('');
+        function updateStatus(id, stat) {
+            const idx = invoiceData.findIndex(o => o.id == id);
+            if(idx > -1) {
+                invoiceData[idx].status = stat;
+                localStorage.setItem('ecoco_i_v6', JSON.stringify(invoiceData));
+                updateDashboard();
             }
+        }
+
+        function updateInvNo(id, val) {
+            const idx = invoiceData.findIndex(o => o.id == id);
+            if(idx > -1) {
+                invoiceData[idx].invNo = val.trim();
+                localStorage.setItem('ecoco_i_v6', JSON.stringify(invoiceData));
+                updateDashboard();
+            }
+        }
+
+        function archiveRow(id) {
+            const idx = invoiceData.findIndex(o => o.id == id);
+            if(idx > -1) {
+                invoiceData[idx].isArchived = true;
+                localStorage.setItem('ecoco_i_v6', JSON.stringify(invoiceData));
+                renderTable();
+                updateDashboard();
+            }
+        }
+
+        function unarchiveRow(id) {
+            if(currentUserRole !== '管理者') {
+                alert("❌ 只有最高系統管理者才能將封存資料解除。");
+                return;
+            }
+            const idx = invoiceData.findIndex(o => o.id == id);
+            if(idx > -1) {
+                invoiceData[idx].isArchived = false;
+                localStorage.setItem('ecoco_i_v6', JSON.stringify(invoiceData));
+                renderTable();
+                updateDashboard();
+            }
+        }
+
+        function deleteRow(id) {
+            if(currentUserRole !== '管理者') {
+                alert("❌ 只有最高系統管理者具備永久刪除此明細之權利。");
+                return;
+            }
+            if(confirm("♻️ 警告：確定要永久刪除此筆發票申請紀錄嗎？")) {
+                invoiceData = invoiceData.filter(o => o.id !== id);
+                localStorage.setItem('ecoco_i_v6', JSON.stringify(invoiceData));
+                renderTable();
+                updateDashboard();
+            }
+        }
+
+        function handleDateFilterChange() {
+            renderTable();
+            updateDashboard();
+        }
+
+        function renderTable() {
+            const activeBody = document.getElementById('activeInvoiceTable');
+            const archiveBody = document.getElementById('archivedInvoiceTable');
+
+            const activeItems = invoiceData.filter(o => !o.isArchived);
+            const archivedItems = invoiceData.filter(o => o.isArchived);
+
+            if(activeItems.length === 0) {
+                activeBody.innerHTML = `<tr><td colspan="14" class="text-center p-6 text-gray-400">目前無任何開立中的發票歷史申請資料。</td></tr>`;
+            } else {
+                activeBody.innerHTML = activeItems.map((item, idx) => {
+                    const prodSummary = item.products.map(p => `${p.name}(x${p.qty})[${p.points}點+${p.price}元]`).join(', ');
+                    
+                    const canEdit = (currentUserRole === '管理者' || currentUserRole === '行銷部') ? '' : 'disabled class="opacity-20 cursor-not-allowed"';
+                    const canArchive = (currentUserRole === '管理者') ? '' : 'disabled class="opacity-20 cursor-not-allowed"';
+                    const canDelete = (currentUserRole === '管理者') ? '' : 'disabled class="opacity-20 cursor-not-allowed"';
+                    const canFinance = (currentUserRole === '管理者' || currentUserRole === '財務部') ? '' : 'disabled bg-gray-100 cursor-not-allowed';
+
+                    return `
+                        <tr class="hover:bg-gray-50 border-b border-gray-100 transition">
+                            <td class="p-2.5 text-center font-mono text-gray-400 select-none">${idx + 1}</td>
+                            <td class="p-2.5">
+                                <select ${canFinance} onchange="updateStatus(${item.id}, this.value)" class="border border-gray-300 rounded p-1 text-xs font-black w-full focus:outline-none">
+                                    <option value="1. 行銷已提交" ${item.status==='1. 行銷已提交'?'selected':''}>1. 行銷已提交</option>
+                                    <option value="2. 財務處理中" ${item.status==='2. 財務處理中'?'selected':''}>2. 財務處理中</option>
+                                    <option value="3. 已成功開立並列印" ${item.status==='3. 已成功開立並列印'?'selected':''}>3. 已成功開立並列印</option>
+                                    <option value="4. 資料有誤退回" ${item.status==='4. 資料有誤退回'?'selected':''}>4. 資料有誤退回</option>
+                                    <option value="5. 發票已寄送" ${item.status==='5. 發票已寄送'?'selected':''}>5. 發票已寄送</option>
+                                    <option value="6. 退貨發票作廢" ${item.status==='6. 退貨發票作廢'?'selected':''}>6. 退貨發票作廢</option>
+                                </select>
+                            </td>
+                            <td class="p-2.5 font-mono font-bold text-gray-700 bg-white cursor-pointer select-all" onclick="copyCell('${item.orderId}', this)">${item.orderId}</td>
+                            <td class="p-2.5 font-mono text-gray-500 bg-white cursor-pointer" onclick="copyCell('${item.applyDate}', this)">${item.applyDate}</td>
+                            <td class="p-2.5 text-gray-600 bg-white cursor-pointer" onclick="copyCell('${item.payMethod}', this)">${item.payMethod}</td>
+                            <td class="p-2.5 text-gray-500 bg-white cursor-pointer" onclick="copyCell('${item.invType}', this)">${item.invType}<br><span class="text-[10px] text-gray-400">${item.carrierType}</span></td>
+                            <td class="p-2.5 font-mono font-black bg-white text-[#FF5000] cursor-pointer" onclick="copyCell('${item.carrierNo}', this)">${item.carrierNo || '紙本證明聯'}</td>
+                            <td class="p-2.5 font-black text-gray-800 bg-white cursor-pointer" onclick="copyCell('${item.custName}', this)">${item.custName || '個人客戶'}</td>
+                            <td class="p-2.5 text-[11px] text-gray-500 bg-white cursor-pointer" onclick="copyCell('${item.custEmail} ${item.custPhone}', this)">${item.custEmail || '-'}<br>${item.custPhone || '-'}</td>
+                            <td class="p-2.5 max-w-[140px] truncate bg-white cursor-pointer" onclick="copyCell('${item.zip}${item.address}', this)"><span class="bg-gray-100 font-mono px-1 rounded text-[#060E9F] font-black mr-1">${item.zip}</span>${item.address}</td>
+                            <td class="p-2.5 bg-white cursor-pointer" onclick="copyCell('${prodSummary}', this)">
+                                <div class="max-w-[180px] truncate font-black text-gray-800" title="${prodSummary}">${prodSummary}</div>
+                                <span class="text-[10px] text-gray-400">課稅: ${item.taxType} | 經辦: ${item.picker}</span>
+                            </td>
+                            <td class="p-2.5 text-right font-mono font-black text-[#060E9F] bg-white cursor-pointer" onclick="copyCell('${item.grandTotal}', this)">$${item.grandTotal}</td>
+                            <td class="p-2.5">
+                                <input ${canFinance} type="text" value="${item.invNo}" onchange="updateInvNo(${item.id}, this.value)" class="w-full border border-gray-300 rounded p-1 text-xs font-mono font-bold" placeholder="填寫發票號">
+                            </td>
+                            <td class="p-2.5 text-center space-x-1 select-none">
+                                <button type="button" ${canEdit} onclick="loadEditRow(${item.id})" class="text-[#060E9F] font-black hover:underline">編輯</button>
+                                <button type="button" ${canArchive} onclick="archiveRow(${item.id})" class="text-amber-600 font-black hover:underline">封存</button>
+                                <button type="button" ${canDelete} onclick="deleteRow(${item.id})" class="text-red-500 font-black hover:underline">刪除</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            if(archivedItems.length === 0) {
+                archiveBody.innerHTML = `<tr><td colspan="11" class="text-center p-4 text-gray-400">目前封存專區尚無任何歷史歸檔紀錄。</td></tr>`;
+            } else {
+                archiveBody.innerHTML = archivedItems.map((item, idx) => {
+                    const prodStr = item.products.map(p => `${p.name}*${p.qty}`).join(', ');
+                    return `
+                        <tr class="bg-gray-50 text-gray-400 text-[11px]">
+                            <td class="p-2 text-center font-mono">${idx+1}</td>
+                            <td class="p-2 font-mono">${item.orderId}</td>
+                            <td class="p-2 font-mono">${item.applyDate}</td>
+                            <td class="p-2">${item.payMethod}</td>
+                            <td class="p-2">${item.invType}</td>
+                            <td class="p-2 font-mono">${item.carrierNo || '紙本'}</td>
+                            <td class="p-2 truncate max-w-[100px]">${item.custName || '個人'}</td>
+                            <td class="p-2 truncate max-w-[150px]" title="${prodStr}">${prodStr}</td>
+                            <td class="p-2 text-right font-mono font-bold">$${item.grandTotal}</td>
+                            <td class="p-2 font-mono font-bold text-gray-500">${item.invNo || '未填'}</td>
+                            <td class="p-2 text-center">
+                                <button type="button" onclick="unarchiveRow(${item.id})" class="text-blue-500 font-black hover:underline">還原解封</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        function updateDashboard() {
+            const filteredCount = invoiceData.length;
+            const statuses = ["1. 行銷已提交", "2. 財務處理中", "3. 已成功開立並列印", "4. 資料有誤退回", "5. 發票已寄送", "6. 退貨發票作廢"];
+            const colors = ["bg-blue-500", "bg-amber-500", "bg-emerald-500", "bg-rose-500", "bg-purple-500", "bg-gray-500"];
+
+            let html = `
+                <div class="bg-[#060E9F]/10 p-3 rounded-xl border border-[#060E9F]/20">
+                    <p class="text-[11px] font-black text-gray-500">歷史建檔申請總計</p>
+                    <p class="text-xl font-black text-[#060E9F]">${filteredCount} 筆</p>
+                    <div class="w-full bg-gray-200 h-1.5 rounded mt-1.5"><div class="bg-[#060E9F] h-1.5 rounded" style="width: 100%"></div></div>
+                </div>
+            `;
+
+            statuses.forEach((status, idx) => {
+                const count = invoiceData.filter(i => i.status === status).length;
+                const percent = filteredCount > 0 ? (count / filteredCount * 100).toFixed(0) : 0;
+                html += `
+                    <div class="bg-white p-3 rounded-xl border border-gray-200 shadow-3xs">
+                        <p class="text-[11px] font-black text-gray-500 truncate" title="${status}">${status}</p>
+                        <p class="text-xl font-black text-gray-800">${count} <span class="text-xs font-normal text-gray-400">(${percent}%)</span></p>
+                        <div class="w-full bg-gray-100 h-1.5 rounded mt-1.5">
+                            <div class="${colors[idx]} h-1.5 rounded transition-all duration-500" style="width: ${percent}%"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('statusDashboard').innerHTML = html;
+
+            const monthMap = {}; const weekMap = {};
+            invoiceData.forEach(item => {
+                monthMap[item.monthKey] = (monthMap[item.monthKey] || 0) + 1;
+                weekMap[item.weekKey] = (weekMap[item.weekKey] || 0) + 1;
+            });
+
+            const sortedMonths = Object.keys(monthMap).sort();
+            const sortedWeeks = Object.keys(weekMap).sort().slice(-8);
+
+            if (monthChartInstance) monthChartInstance.destroy();
+            monthChartInstance = new Chart(document.getElementById('monthChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: sortedMonths.length ? sortedMonths : ["無數據"],
+                    datasets: [{ label: '每月手動發票申請量', data: sortedMonths.map(k => monthMap[k]), backgroundColor: '#060E9F', borderRadius: 4 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+            });
+
+            if (weekChartInstance) weekChartInstance.destroy();
+            weekChartInstance = new Chart(document.getElementById('weekChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: sortedWeeks.length ? sortedWeeks : ["無數據"],
+                    datasets: [{ label: '每週趨勢起伏波動', data: sortedWeeks.map(k => weekMap[k]), borderColor: '#FF5000', backgroundColor: 'rgba(255, 80, 0, 0.1)', fill: true, tension: 0.2 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+            });
         }
     </script>
 </body>
